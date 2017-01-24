@@ -1,0 +1,11 @@
+<template>
+
+  <div repeat.for="item of stuff.items">
+    <compose if.bind="item.type === 'radio'"  view-model="radio-widget"  model.bind="item"></compose>
+    <compose if.bind="item.type === 'select'" view-model="select-widget" model.bind="item"></compose>
+    hi
+  </div>
+  
+  ${placeholder}
+
+</template>

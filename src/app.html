@@ -1,3 +1,14 @@
 <template>
+  <require from="app.css"></require>
   <h1>${message}</h1>
-</template>
+  <div class="header">
+    <compose view-model="header"></compose>
+  </div>
+  <div class="page-host">
+    <router-view></router-view> 
+  </div>
+  <div class="footer">
+    <compose view-model="footer"></compose>
+  </div>
+</template> 
+
