@@ -1,11 +1,13 @@
 <template>
-
-  <div repeat.for="item of stuff.items">
-    <compose if.bind="item.type === 'radio'"  view-model="radio-widget"  model.bind="item"></compose>
-    <compose if.bind="item.type === 'select'" view-model="select-widget" model.bind="item"></compose>
-    hi
+  <compose view-model="page-view" model.bind="survey.pages[pageIdx]"></compose>
+  <div class="inline-half left-align" bind.if="pageIdx > 0">
+    <a href="${router.generate('home', {pageNum: pageIdx})}">
+      ${survey.pages[pageIdx-1].name}
+    </a>
   </div>
-  
-  ${placeholder}
-
+  <div class="inline-half right-align" bind.if="survey.pages[pageIdx+1]">
+    <a href="${router.generate('home', {pageNum: pageIdx+2})}">
+      ${survey.pages[pageIdx+1].name}
+    </a>
+  </div>
 </template>

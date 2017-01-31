@@ -1,0 +1,13 @@
+<template>
+
+  <div>
+    <div class="${group.border ? 'group-border' : ''}">
+      Group ${group.name}
+      <div repeat.for="item of group.items">
+        <compose if.bind="item.constructor.name === 'Group'" model.bind="item" view-model="group-view"></compose>
+        <compose if.bind="item.constructor.name != 'Group'" model.bind="item" view-model="question-view"></compose>
+      </div>
+    </div>
+  </div>
+  
+</template>

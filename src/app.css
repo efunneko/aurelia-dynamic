@@ -1,1 +1,22 @@
- 
+.left-align {
+    text-align: left;
+}
+
+.right-align {
+    text-align: right;
+}
+
+.inline-half {
+    display: inline-block;
+    width: 50%;
+}
+
+.page-host {
+    max-width: 800px;
+    margin:    auto;
+}
+
+.group-border {
+    border:  1px solid #aaa;
+    padding: 8px;
+}

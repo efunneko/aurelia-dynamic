@@ -7,8 +7,10 @@ export class App {
   	this.router = router;
   	config.title = "Fun With Aurelia";
   	config.map([
-      { route: '', redirect: 'home' },
-      { route: 'home', name: 'home', moduleId: 'home', nav: true, title: 'Home' },
+      { route: '', redirect: 'home/page/1' },
+      { route: 'home', redirect: 'home/page/1' },
+      { route: 'home/page', redirect: 'home/page/1' },
+      { route: 'home/page/:pageNum', name: 'home', moduleId: 'home' },
   	]);
     config.mapUnknownRoutes('not-found');
   }

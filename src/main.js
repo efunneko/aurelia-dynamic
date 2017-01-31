@@ -10,6 +10,7 @@ Promise.config({
 export function configure(aurelia) {
   aurelia.use
     .standardConfiguration()
+    .plugin('aurelia-materialize-bridge', b => b.useAll())
     .feature('resources');
 
   if (environment.debug) {
