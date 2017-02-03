@@ -120,6 +120,35 @@ define('footer',["exports"], function (exports) {
     return Footer;
   }();
 });
+define('group-view',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var GroupView = exports.GroupView = function () {
+    function GroupView() {
+      _classCallCheck(this, GroupView);
+
+      this.group = null;
+    }
+
+    GroupView.prototype.activate = function activate(group) {
+      this.group = group;
+    };
+
+    return GroupView;
+  }();
+
+  ;
+});
 define('header',["exports"], function (exports) {
   "use strict";
 
@@ -260,7 +289,7 @@ define('page-view',['exports', 'aurelia-framework', './models/page'], function (
 
   ;
 });
-define('radio-widget',["exports"], function (exports) {
+define('question-view',["exports"], function (exports) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -273,52 +302,22 @@ define('radio-widget',["exports"], function (exports) {
     }
   }
 
-  var RadioWidget = exports.RadioWidget = function () {
-    function RadioWidget() {
-      _classCallCheck(this, RadioWidget);
+  var QuestionView = exports.QuestionView = function () {
+    function QuestionView() {
+      _classCallCheck(this, QuestionView);
 
-      this.options = [];
-      this.name = "";
-      this.value = "";
+      this.question = null;
     }
 
-    RadioWidget.prototype.activate = function activate(obj) {
-      this.options = obj.options;
-      this.name = obj.name;
+    QuestionView.prototype.activate = function activate(question) {
+      console.log(question);
+      this.question = question;
     };
 
-    return RadioWidget;
+    return QuestionView;
   }();
-});
-define('select-widget',["exports"], function (exports) {
-  "use strict";
 
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var SelectWidget = exports.SelectWidget = function () {
-    function SelectWidget() {
-      _classCallCheck(this, SelectWidget);
-
-      this.options = [];
-      this.name = "";
-      this.value = "";
-    }
-
-    SelectWidget.prototype.activate = function activate(obj) {
-      this.options = obj.options;
-      this.name = obj.name;
-    };
-
-    return SelectWidget;
-  }();
+  ;
 });
 define('survey-data',["exports"], function (exports) {
   "use strict";
@@ -341,13 +340,19 @@ define('survey-data',["exports"], function (exports) {
           value: ""
         }, {
           type: "select",
-          options: ["one", "two", "three", "three-3", "three-4", "three-5", "three-6", "three-7", "three-8", "three-9", "three-10", "three-11", "three-12", "three-13", "three-14", "three-15", "three-16", "three-17", "three-18", "three-19", "three-20", "three-21", "three-22", "three-23", "three-24", "three-25", "three-26", "three-27", "three-28", "three-29", "three-30", "three-31", "three-32", "three-33", "three-34"],
+          options: ["one", "two", "three", "three-3"],
           name: "select",
           value: ""
         }, {
           type: "radio",
           options: ["one-r", "two-r", "three-r"],
           name: "radio",
+          value: ""
+        }, {
+          type: "checkbox-grid",
+          columns: [{ name: "With Ketchup" }, { name: "With Mustard" }, { name: "With Relish" }],
+          rows: [{ name: "Hamburger" }, { name: "Hotdog" }, { name: "Fries" }, { name: "Ice Cream" }, { name: "A big plate of well cooked sausages" }],
+          name: "condiments",
           value: ""
         }, {
           type: "text",
@@ -412,7 +417,219 @@ define('survey-data',["exports"], function (exports) {
 
   };
 });
-define('text-widget',["exports"], function (exports) {
+define('question-widgets/checkbox-grid-widget',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var CheckboxGrid = exports.CheckboxGrid = function () {
+    function CheckboxGrid() {
+      _classCallCheck(this, CheckboxGrid);
+
+      this.question = {};
+      this.checkboxes = {};
+    }
+
+    CheckboxGrid.prototype.activate = function activate(obj) {
+      this.question = obj;
+
+      for (var _iterator = obj.rows, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+        var _ref;
+
+        if (_isArray) {
+          if (_i >= _iterator.length) break;
+          _ref = _iterator[_i++];
+        } else {
+          _i = _iterator.next();
+          if (_i.done) break;
+          _ref = _i.value;
+        }
+
+        var row = _ref;
+
+        var cb = {};
+        for (var _iterator2 = obj.columns, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
+          var _ref2;
+
+          if (_isArray2) {
+            if (_i2 >= _iterator2.length) break;
+            _ref2 = _iterator2[_i2++];
+          } else {
+            _i2 = _iterator2.next();
+            if (_i2.done) break;
+            _ref2 = _i2.value;
+          }
+
+          var col = _ref2;
+
+          cb[col.name] = {
+            name: obj.name + "." + row.name + "." + col.name,
+            value: false
+          };
+        }
+        this.checkboxes[row.name] = cb;
+      }
+      console.log(this.checkboxes);
+    };
+
+    return CheckboxGrid;
+  }();
+
+  ;
+});
+define('question-widgets/checkbox-grid',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var CheckboxGrid = exports.CheckboxGrid = function () {
+    function CheckboxGrid() {
+      _classCallCheck(this, CheckboxGrid);
+
+      this.name = "";
+      this.value = "";
+    }
+
+    CheckboxGrid.prototype.activate = function activate(obj) {
+      this.name = obj.name;
+    };
+
+    return CheckboxGrid;
+  }();
+});
+define('question-widgets/radio-widget',["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.RadioWidget = undefined;
+
+  function _initDefineProp(target, property, descriptor, context) {
+    if (!descriptor) return;
+    Object.defineProperty(target, property, {
+      enumerable: descriptor.enumerable,
+      configurable: descriptor.configurable,
+      writable: descriptor.writable,
+      value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+    });
+  }
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+    var desc = {};
+    Object['ke' + 'ys'](descriptor).forEach(function (key) {
+      desc[key] = descriptor[key];
+    });
+    desc.enumerable = !!desc.enumerable;
+    desc.configurable = !!desc.configurable;
+
+    if ('value' in desc || desc.initializer) {
+      desc.writable = true;
+    }
+
+    desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+      return decorator(target, property, desc) || desc;
+    }, desc);
+
+    if (context && desc.initializer !== void 0) {
+      desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+      desc.initializer = undefined;
+    }
+
+    if (desc.initializer === void 0) {
+      Object['define' + 'Property'](target, property, desc);
+      desc = null;
+    }
+
+    return desc;
+  }
+
+  function _initializerWarningHelper(descriptor, context) {
+    throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+  }
+
+  var _desc, _value, _class, _descriptor;
+
+  var RadioWidget = exports.RadioWidget = (_class = function () {
+    function RadioWidget() {
+      _classCallCheck(this, RadioWidget);
+
+      this.options = [];
+      this.name = "";
+
+      _initDefineProp(this, "value", _descriptor, this);
+    }
+
+    RadioWidget.prototype.activate = function activate(obj) {
+      this.options = obj.options;
+      this.name = obj.name;
+    };
+
+    RadioWidget.prototype.valueChanged = function valueChanged(oldVal, newVal) {
+      console.log(oldVal, newVal);
+    };
+
+    return RadioWidget;
+  }(), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "value", [_aureliaFramework.bindable], {
+    enumerable: true,
+    initializer: function initializer() {
+      return "";
+    }
+  })), _class);
+});
+define('question-widgets/select-widget',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var SelectWidget = exports.SelectWidget = function () {
+    function SelectWidget() {
+      _classCallCheck(this, SelectWidget);
+
+      this.options = [];
+      this.name = "";
+      this.value = "";
+    }
+
+    SelectWidget.prototype.activate = function activate(obj) {
+      this.options = obj.options;
+      this.name = obj.name;
+    };
+
+    return SelectWidget;
+  }();
+});
+define('question-widgets/text-widget',["exports"], function (exports) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -439,6 +656,15 @@ define('text-widget',["exports"], function (exports) {
 
     return TextWidget;
   }();
+});
+define('resources/index',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.configure = configure;
+  function configure(config) {}
 });
 define('models/group',["exports", "./question"], function (exports, _question) {
   "use strict";
@@ -590,21 +816,23 @@ define('models/survey',["exports", "./page"], function (exports, _page) {
     return Survey;
   }();
 });
-define('resources/index',["exports"], function (exports) {
+define('question-widgets/checkbox-widget',["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.configure = configure;
-  function configure(config) {}
-});
-define('group-view',["exports"], function (exports) {
-  "use strict";
+  exports.CheckboxWidget = undefined;
 
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
+  function _initDefineProp(target, property, descriptor, context) {
+    if (!descriptor) return;
+    Object.defineProperty(target, property, {
+      enumerable: descriptor.enumerable,
+      configurable: descriptor.configurable,
+      writable: descriptor.writable,
+      value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+    });
+  }
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -612,152 +840,78 @@ define('group-view',["exports"], function (exports) {
     }
   }
 
-  var GroupView = exports.GroupView = function () {
-    function GroupView() {
-      _classCallCheck(this, GroupView);
+  function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+    var desc = {};
+    Object['ke' + 'ys'](descriptor).forEach(function (key) {
+      desc[key] = descriptor[key];
+    });
+    desc.enumerable = !!desc.enumerable;
+    desc.configurable = !!desc.configurable;
 
-      this.group = null;
+    if ('value' in desc || desc.initializer) {
+      desc.writable = true;
     }
 
-    GroupView.prototype.activate = function activate(group) {
-      this.group = group;
+    desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+      return decorator(target, property, desc) || desc;
+    }, desc);
+
+    if (context && desc.initializer !== void 0) {
+      desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+      desc.initializer = undefined;
+    }
+
+    if (desc.initializer === void 0) {
+      Object['define' + 'Property'](target, property, desc);
+      desc = null;
+    }
+
+    return desc;
+  }
+
+  function _initializerWarningHelper(descriptor, context) {
+    throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+  }
+
+  var _desc, _value, _class, _descriptor;
+
+  var CheckboxWidget = exports.CheckboxWidget = (_class = function () {
+    function CheckboxWidget() {
+      _classCallCheck(this, CheckboxWidget);
+
+      this.question = {};
+
+      _initDefineProp(this, "value", _descriptor, this);
+    }
+
+    CheckboxWidget.prototype.activate = function activate(obj) {
+      this.question = obj;
     };
 
-    return GroupView;
-  }();
+    CheckboxWidget.prototype.valueChanged = function valueChanged(newVal, oldVal) {
+      console.log("Changed", this.question.name, oldVal, newVal);
+    };
 
+    return CheckboxWidget;
+  }(), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "value", [_aureliaFramework.bindable], {
+    enumerable: true,
+    initializer: function initializer() {
+      return false;
+    }
+  })), _class);
   ;
-});
-define('question-view',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var QuestionView = exports.QuestionView = function () {
-    function QuestionView() {
-      _classCallCheck(this, QuestionView);
-
-      this.question = null;
-    }
-
-    QuestionView.prototype.activate = function activate(question) {
-      console.log(question);
-      this.question = question;
-    };
-
-    return QuestionView;
-  }();
-
-  ;
-});
-define('question-widgets/radio-widget',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var RadioWidget = exports.RadioWidget = function () {
-    function RadioWidget() {
-      _classCallCheck(this, RadioWidget);
-
-      this.options = [];
-      this.name = "";
-      this.value = "";
-    }
-
-    RadioWidget.prototype.activate = function activate(obj) {
-      this.options = obj.options;
-      this.name = obj.name;
-    };
-
-    return RadioWidget;
-  }();
-});
-define('question-widgets/select-widget',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var SelectWidget = exports.SelectWidget = function () {
-    function SelectWidget() {
-      _classCallCheck(this, SelectWidget);
-
-      this.options = [];
-      this.name = "";
-      this.value = "";
-    }
-
-    SelectWidget.prototype.activate = function activate(obj) {
-      this.options = obj.options;
-      this.name = obj.name;
-    };
-
-    return SelectWidget;
-  }();
-});
-define('question-widgets/text-widget',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var TextWidget = exports.TextWidget = function () {
-    function TextWidget() {
-      _classCallCheck(this, TextWidget);
-
-      this.name = "";
-      this.value = "";
-    }
-
-    TextWidget.prototype.activate = function activate(obj) {
-      this.name = obj.name;
-    };
-
-    return TextWidget;
-  }();
 });
 define('text!app.html', ['module'], function(module) { module.exports = "<template><require from=\"app.css\"></require><h1>${message}</h1><div class=\"header\"><compose view-model=\"header\"></compose></div><div class=\"page-host\"><router-view></router-view></div><div class=\"footer\"><compose view-model=\"footer\"></compose></div></template>"; });
 define('text!app.css', ['module'], function(module) { module.exports = ".left-align {\n    text-align: left;\n}\n\n.right-align {\n    text-align: right;\n}\n\n.inline-half {\n    display: inline-block;\n    width: 50%;\n}\n\n.page-host {\n    max-width: 800px;\n    margin:    auto;\n}\n\n.group-border {\n    border:  1px solid #aaa;\n    padding: 8px;\n}\n"; });
 define('text!footer.html', ['module'], function(module) { module.exports = "<template><div>My Footer</div></template>"; });
+define('text!group-view.html', ['module'], function(module) { module.exports = "<template><div><div class=\"${group.border ? 'group-border' : ''}\">Group ${group.name}<div repeat.for=\"item of group.items\"><compose if.bind=\"item.constructor.name === 'Group'\" model.bind=\"item\" view-model=\"group-view\"></compose><compose if.bind=\"item.constructor.name != 'Group'\" model.bind=\"item\" view-model=\"question-view\"></compose></div></div></div></template>"; });
 define('text!header.html', ['module'], function(module) { module.exports = "<template>${message}</template>"; });
 define('text!home.html', ['module'], function(module) { module.exports = "<template><compose view-model=\"page-view\" model.bind=\"survey.pages[pageIdx]\"></compose><div class=\"inline-half left-align\" bind.if=\"pageIdx > 0\"><a href=\"${router.generate('home', {pageNum: pageIdx})}\">${survey.pages[pageIdx-1].name}</a></div><div class=\"inline-half right-align\" bind.if=\"survey.pages[pageIdx+1]\"><a href=\"${router.generate('home', {pageNum: pageIdx+2})}\">${survey.pages[pageIdx+1].name}</a></div></template>"; });
 define('text!page-view.html', ['module'], function(module) { module.exports = "<template>Page ${page.name}<compose view-model=\"group-view\" model.bind=\"page.group\"></compose></template>"; });
-define('text!radio-widget.html', ['module'], function(module) { module.exports = "<template><div repeat.for=\"option of options\"><md-radio md-name=\"${name}\" md-value=\"${option}\" md-checked.bind=\"value\">${option}</md-radio></div></template>"; });
-define('text!select-widget.html', ['module'], function(module) { module.exports = "<template><select md-select=\"label: select a value\" value.bind=\"value\"><option repeat.for=\"option of options\" value=\"${option}\">${option}</option></select></template>"; });
-define('text!text-widget.html', ['module'], function(module) { module.exports = "<template><md-input md-label=\"${name}\" md-value.bind=\"value\"></md-input></template>"; });
-define('text!group-view.html', ['module'], function(module) { module.exports = "<template><div><div class=\"${group.border ? 'group-border' : ''}\">Group ${group.name}<div repeat.for=\"item of group.items\"><compose if.bind=\"item.constructor.name === 'Group'\" model.bind=\"item\" view-model=\"group-view\"></compose><compose if.bind=\"item.constructor.name != 'Group'\" model.bind=\"item\" view-model=\"question-view\"></compose></div></div></div></template>"; });
 define('text!question-view.html', ['module'], function(module) { module.exports = "<template><div><compose model.bind=\"question\" view-model=\"./question-widgets/${question.type}-widget\"></compose></div></template>"; });
-define('text!question-widgets/radio-widget.html', ['module'], function(module) { module.exports = "<template><div repeat.for=\"option of options\"><md-radio md-name=\"${name}\" md-value=\"${option}\" md-checked.bind=\"value\">${option}</md-radio></div></template>"; });
+define('text!question-widgets/checkbox-grid-widget.html', ['module'], function(module) { module.exports = "<template><table><tr><th>Question</th><th repeat.for=\"column of question.columns\">${column.name}</th></tr><tr repeat.for=\"row of question.rows\"><td>${row.name}</td><td repeat.for=\"column of question.columns\"><compose model.bind=\"checkboxes[row.name][column.name]\" view-model=\"./checkbox-widget\"></compose></td></tr></table></template>"; });
+define('text!question-widgets/radio-widget.html', ['module'], function(module) { module.exports = "<template><div repeat.for=\"option of options\"><md-radio md-name=\"${name}\" md-value=\"${option}\" md-checked.bind=\"value\">${option}</md-radio></div>${value}</template>"; });
 define('text!question-widgets/select-widget.html', ['module'], function(module) { module.exports = "<template><select md-select=\"label: select a value\" value.bind=\"value\"><option repeat.for=\"option of options\" value=\"${option}\">${option}</option></select></template>"; });
 define('text!question-widgets/text-widget.html', ['module'], function(module) { module.exports = "<template><md-input md-label=\"${name}\" md-value.bind=\"value\"></md-input></template>"; });
+define('text!question-widgets/checkbox-widget.html', ['module'], function(module) { module.exports = "<template><md-checkbox md-filled-in=\"true\" md-checked.bind=\"value\"></md-checkbox></template>"; });
 //# sourceMappingURL=app-bundle.js.map

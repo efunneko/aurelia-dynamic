@@ -1,0 +1,15 @@
+<template>
+  <table>
+    <tr>
+      <th>Question</th>
+      <th repeat.for="column of question.columns">${column.name}</th>
+    </tr>
+    <tr repeat.for="row of question.rows">
+      <td>${row.name}</td>
+      <td repeat.for="column of question.columns">
+        <compose model.bind="checkboxes[row.name][column.name]" view-model="./checkbox-widget"></compose>
+      </td>
+    </tr>
+  </table>
+  
+</template>
