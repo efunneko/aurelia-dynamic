@@ -10,7 +10,9 @@ Promise.config({
 export function configure(aurelia) {
   aurelia.use
     .standardConfiguration()
-    .plugin('aurelia-materialize-bridge', b => b.useAll())
+    .plugin('aurelia-materialize-bridge',
+            bridge => bridge.useAll())
+    .plugin('aurelia-animator-css')
     .feature('resources');
 
   if (environment.debug) {

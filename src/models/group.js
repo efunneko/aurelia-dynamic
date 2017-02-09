@@ -1,8 +1,6 @@
 import {Question} from './question';
 
 export class Group { 
-  constructor() {
-  } 
 
   static fromObject(src) { 
     const group = Object.assign(new Group(), src);
@@ -16,6 +14,7 @@ export class Group {
         group.items.push(Group.fromObject(item));
       }
       else {
+        console.log("Adding quest", item);
         group.items.push(Question.fromObject(item));
       }
     }

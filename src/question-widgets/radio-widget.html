@@ -1,6 +1,8 @@
 <template>
-  <div repeat.for="option of options">
-    <md-radio md-name="${name}" md-value="${option}" md-checked.bind="value">${option}</md-radio>
+  <div repeat.for="option of question.options">
+    <md-radio md-gap="true" md-name="${name}" md-value="${$index}"
+              md-checked.bind="value">
+      ${option.name}
+    </md-radio>
   </div>
-  ${value}
 </template>

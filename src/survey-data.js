@@ -13,50 +13,78 @@ export default {
           {
             type: "text",
             name: "text input",
-            value: "",
+          },
+          {
+            type: "number",
+            scoreType: "scale",
+            scoreData: [
+              {upTo: 10, scale: 1},
+              {upTo: 20, scale: 0.5},
+              {upTo: 40, scale: 0.25},
+              {upTo:100, scale: 0.125}
+            ],
+            name: "number-input",
+          },
+          {
+            type: "number-grid",
+            scoreType: "scale",
+            scoreData: [
+              {upTo: 10, scale: 1},
+              {upTo: 20, scale: 0.5},
+              {upTo: 40, scale: 0.25},
+              {upTo:100, scale: 0.125}
+            ],
+            columns: [
+              {name: "Inside",  scale: 1},
+              {name: "Outside", scale: 1},
+            ],
+            rows: [
+              {name: "Balls",  scale: 1},
+              {name: "Chairs", scale: 2},
+              {name: "Desks",  scale: 3},
+              {name: "Stools", scale: 4},
+            ],
+            name: "number-grid",
           },
           {
             type: "select",
             options: [
-              "one",
-              "two",
-              "three",
-              "three-3",
+              {name: "--choose-one--", scoreData: 0},
+              {name: "one", scoreData: 1},
+              {name: "two", scoreData: 2},
+              {name: "three", scoreData: 3},
+              {name: "three-3", scoreData: 4},
             ],
-            name: "select",
-            value: "",
+            name: "select-on-page-1",
           },
           {
             type: "radio",
             options: [
-              "one-r",
-              "two-r",
-              "three-r"
+              {name: "one-r", scoreData: 0},
+              {name: "two-r", scoreData: 2},
+              {name: "three-r", scoreData: 4},
             ],
-            name: "radio",
-            value: "",
+            name: "radio-on-page-1",
           },
           {
             type: "checkbox-grid",
             columns: [
-              {name: "With Ketchup"},
-              {name: "With Mustard"},
-              {name: "With Relish"}
+              {name: "With Ketchup", scoreData: 1},
+              {name: "With Mustard", scoreData: 2},
+              {name: "With Relish", scoreData: 3}
             ],
             rows: [
-              {name: "Hamburger"},
-              {name: "Hotdog"},
-              {name: "Fries"},
-              {name: "Ice Cream"},
-              {name: "A big plate of well cooked sausages"}
+              {name: "Hamburger", scoreData: 1},
+              {name: "Hotdog", scoreData: 2},
+              {name: "Fries", scoreData: 3},
+              {name: "Ice Cream", scoreData: 4},
+              {name: "A big plate of well cooked sausages", scoreData: 5}
               ],
             name: "condiments",
-            value: "",
           },
           {
             type: "text",
             name: "another text input",
-            value: "",
           },
 
         ]
@@ -67,39 +95,66 @@ export default {
       description: "Other details",
       group: {
         name:   "Home address",
-        border: true,
+        border: false,
         items: [
           {
-            type: "text",
-            name: "text input",
-            value: "",
+            type: "group",
+            border: true,
+            name: "Test group",
+            items: [
+              {
+                type: "select",
+                options: [
+                  {name: "cat", scoreData: 1},
+                  {name: "dog", scoreData: 2},
+                  {name: "horse", scoreData: 3}
+                ],
+                name: "animal",
+              },
+              {
+                type: "radio",
+                options: [
+                  {name: "pizza", scoreData: 1},
+                  {name: "hotdog", scoreData: 2},
+                  {name: "poutine", scoreData: 3},
+                ],
+                name: "food",
+              },
+            ]
           },
           {
-            type: "select",
-            options: [
-              "one",
-              "two",
-              "three"
-            ],
-            name: "select",
-            value: "",
-          },
-          {
-            type: "radio",
-            options: [
-              "one-r",
-              "two-r",
-              "three-r"
-            ],
-            name: "radio",
-            value: "",
-          },
-          {
-            type: "text",
-            name: "another text input",
-            value: "",
-          },
-
+            type: "group",
+            border: true,
+            name: "Test group 2",
+            items: [
+              {
+                type: "text",
+                name: "text input",
+              },
+              {
+                type: "select",
+                options: [
+                  {name: "one", scoreData: 1},
+                  {name: "two", scoreData: 2},
+                  {name: "three", scoreData: 3}
+                ],
+                name: "select-on-page-2",
+              },
+              {
+                type: "radio",
+                options: [
+                  {name: "one-r", scoreData: 1},
+                  {name: "two-r", scoreData: 1},
+                  {name: "three-r", scoreData: 1},
+                ],
+                name: "radio-on-page-2",
+              },
+              {
+                type: "text",
+                name: "another text input",
+              },
+            ]
+          }
         ]
       }
     },
@@ -111,56 +166,8 @@ export default {
         border: true,
         items: [
           {
-            type: "radio",
-            options: [
-              "option-1",
-              "option-2",
-              "option-3",
-              "option-4",
-              "option-5",
-              "option-6",
-              "option-7",
-              "option-8",
-              "option-9",
-              "option-10",
-              "option-11",
-              "option-12",
-              "option-13",
-              "option-14",
-              "option-15",
-              "option-16",
-              "option-17",
-              "option-18",
-              "option-19",
-              "option-20",
-            ],
-            name: "radio",
-            value: "",
-          },
-          {
-            type: "select",
-            options: [
-              "one",
-              "two",
-              "three"
-            ],
-            name: "select",
-            value: "",
-          },
-          {
-            type: "radio",
-            options: [
-              "one-r",
-              "two-r",
-              "three-r"
-            ],
-            name: "radio",
-            value: "",
-          },
-          {
             type: "text",
             name: "another text input",
-            value: "",
           },
 
         ]

@@ -1,13 +1,19 @@
 <template>
 
   <div>
-    <div class="${group.border ? 'group-border' : ''}">
-      Group ${group.name}
+    <md-card if.bind="group.border == true" md-title="${group.name}">
       <div repeat.for="item of group.items">
         <compose if.bind="item.constructor.name === 'Group'" model.bind="item" view-model="group-view"></compose>
         <compose if.bind="item.constructor.name != 'Group'" model.bind="item" view-model="question-view"></compose>
       </div>
-    </div>
+    </md-card>
+    <div if.bind="group.border == false">
+      ${group.name}
+      <div repeat.for="item of group.items">
+        <compose if.bind="item.constructor.name === 'Group'" model.bind="item" view-model="group-view"></compose>
+        <compose if.bind="item.constructor.name != 'Group'" model.bind="item" view-model="question-view"></compose>
+      </div>
+    </md-card>
   </div>
   
 </template>

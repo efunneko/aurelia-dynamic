@@ -1,4 +1,10 @@
 <template>
-  ${message}
+  <require from="header.css"></require>
+  <div class="header">
+    <div class="header-content">
+      Current Score: ${score}
+      <div class="header-score-notification au-animate" repeat.for="notification of scoreNotifications">${notification}</div>
+    </div>
+  </div>
 </template>
   

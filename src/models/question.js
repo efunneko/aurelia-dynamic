@@ -1,16 +1,24 @@
+import {inject} from 'aurelia-framework';
+ 
 export class Question { 
-  constructor() {
-  } 
+  constructor(scoreboard) {
+    this.scoreboard = scoreboard;
+  }
 
   static fromObject(src) { 
-    return Object.assign(new Question(), src); 
+    let obj = Object.assign(new Question(), src);
+    obj.learnAnswer();
+    return obj;
   } 
 
-  name    = "";
-  value   = null;
-  type    = null;
-  text    = "";
-  details = {};
+  learnAnswer() {
+    //this.answer = this.scoreboard.getAnswer(this.name);
+  }
 
+  answerQuestion(answer) {
+    this.answer = Answer.fromObject(answer);
+    this.scoreboard(this.answer);
+  }
+  
 } 
 
