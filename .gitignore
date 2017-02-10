@@ -1,3 +1,6 @@
 node_modules
 .idea
 .DS_STORE
+scripts/app*.js
+scripts/*.map
+scripts/vendor*.js
