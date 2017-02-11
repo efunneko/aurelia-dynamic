@@ -9,6 +9,7 @@
   "license": "MIT",
   "dependencies": {
     "aurelia-animator-css": "^1.0.1",
+    "aurelia-bootstrap": "^0.1.14",
     "aurelia-bootstrapper": "^1.0.0",
     "aurelia-fetch-client": "^1.1.0",
     "bluebird": "^3.4.1",
