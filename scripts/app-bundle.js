@@ -308,9 +308,7 @@ define('main',['exports', './environment'], function (exports, _environment) {
   });
 
   function configure(aurelia) {
-    aurelia.use.standardConfiguration().plugin('aurelia-materialize-bridge', function (bridge) {
-      return bridge.useAll();
-    }).plugin('aurelia-animator-css').feature('resources');
+    aurelia.use.standardConfiguration().plugin('aurelia-animator-css').plugin('aurelia-bootstrap').feature('resources');
 
     if (_environment2.default.debug) {
       aurelia.use.developmentLogging();
@@ -547,6 +545,61 @@ define('survey-data',["exports"], function (exports) {
     }]
 
   };
+});
+define('header/score',['exports', 'aurelia-framework', '../scoreboard'], function (exports, _aureliaFramework, _scoreboard) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.SelectWidget = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var _createClass = function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  }();
+
+  var _dec, _class;
+
+  var SelectWidget = exports.SelectWidget = (_dec = (0, _aureliaFramework.inject)(_scoreboard.ScoreBoard), _dec(_class = function () {
+    function SelectWidget(scoreboard) {
+      _classCallCheck(this, SelectWidget);
+
+      this.score = 0;
+
+      this.scoreboard = scoreboard;
+    }
+
+    SelectWidget.prototype.activate = function activate(obj) {};
+
+    _createClass(SelectWidget, [{
+      key: 'score',
+      set: function set(val) {
+        this.score = val;
+      }
+    }]);
+
+    return SelectWidget;
+  }()) || _class);
 });
 define('question-widgets/checkbox-grid-widget',["exports"], function (exports) {
   "use strict";
@@ -1176,70 +1229,6 @@ define('question-widgets/text-widget',["exports"], function (exports) {
     return TextWidget;
   }();
 });
-define('resources/index',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.configure = configure;
-  function configure(config) {}
-});
-define('header/score',['exports', 'aurelia-framework', '../scoreboard'], function (exports, _aureliaFramework, _scoreboard) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.SelectWidget = undefined;
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var _createClass = function () {
-    function defineProperties(target, props) {
-      for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ("value" in descriptor) descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-      }
-    }
-
-    return function (Constructor, protoProps, staticProps) {
-      if (protoProps) defineProperties(Constructor.prototype, protoProps);
-      if (staticProps) defineProperties(Constructor, staticProps);
-      return Constructor;
-    };
-  }();
-
-  var _dec, _class;
-
-  var SelectWidget = exports.SelectWidget = (_dec = (0, _aureliaFramework.inject)(_scoreboard.ScoreBoard), _dec(_class = function () {
-    function SelectWidget(scoreboard) {
-      _classCallCheck(this, SelectWidget);
-
-      this.score = 0;
-
-      this.scoreboard = scoreboard;
-    }
-
-    SelectWidget.prototype.activate = function activate(obj) {};
-
-    _createClass(SelectWidget, [{
-      key: 'score',
-      set: function set(val) {
-        this.score = val;
-      }
-    }]);
-
-    return SelectWidget;
-  }()) || _class);
-});
 define('models/answer',["exports"], function (exports) {
   "use strict";
 
@@ -1462,21 +1451,30 @@ define('models/survey',["exports", "./page"], function (exports, _page) {
     return Survey;
   }();
 });
-define('text!app.css', ['module'], function(module) { module.exports = "@media screen and ( min-width: 320px ){\n    html {\n        font-size: 150%;\n    }\n}\n\nbody {\n    margin: auto;\n    max-width: 800px;\n    margin-top: 50px;\n}\n\n@media screen and ( max-width: 830px ){\n    body {\n        margin: 50px 15px 0 15px;\n    }\n}\n\ntd, th {\n    padding: 5px;\n}\n\nlabel {\n    color: #222;\n}\n\n.left-align {\n    text-align: left;\n}\n\n.right-align {\n    text-align: right;\n}\n\n.inline-half {\n    display: inline-block;\n    width: 50%;\n}\n\n.page-host {\n    max-width: 800px;\n    margin:    auto;\n}\n\n.group-border {\n    border:  1px solid #aaa;\n    padding: 8px;\n    margin: 10px 0px;\n}\n\n\n.number-widget-minus, .number-widget-plus, .number-widget-input {\n    display: inline-block;\n    border:  1px solid #888;\n    height: 1.5em;\n}\n\n.number-widget-minus, .number-widget-plus {\n    width: 1.5em;\n    text-align: center;\n    background-color: #009688;\n    color: white;\n    cursor: pointer;\n    -webkit-user-select: none;  \n    -moz-user-select: none;    \n    -ms-user-select: none;      \n    user-select: none;\n}\n\n.number-widget-minus {\n    border-radius: 4px 0px 0px 4px;\n    font-weight: bold;\n}\n\n.number-widget-plus {\n    border-radius: 0px 4px 4px 0px;\n}\n\n.number-widget-input {\n    min-width: 2.5em;\n    padding: 0px 5px 0px 8px;\n    text-align: right;\n    border-left: none;\n    border-right: none;\n}"; });
-define('text!app.html', ['module'], function(module) { module.exports = "<template><require from=\"app.css\"></require><md-colors md-primary-color=\"#000000\" md-accent-color=\"#009688\"></md-colors><compose view-model=\"header\"></compose><div class=\"page-host\"><router-view></router-view></div><compose view-model=\"footer\"></compose></template>"; });
+define('resources/index',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.configure = configure;
+  function configure(config) {}
+});
+define('text!app.html', ['module'], function(module) { module.exports = "<template><require from=\"app.css\"></require><div class=\"container\"><compose view-model=\"header\"></compose><div class=\"page-host\"><router-view></router-view></div><compose view-model=\"footer\"></compose></div></template>"; });
+define('text!app.css', ['module'], function(module) { module.exports = "/*\n@media screen and ( min-width: 320px ){\n    html {\n        font-size: 150%;\n    }\n}\n\n@media screen and ( max-width: 830px ){\n    body {\n        margin: 50px 15px 0 15px;\n    }\n}\n*/\n\nbody {\n    margin: auto;\n    max-width: 800px;\n    margin-top: 50px;\n}\n\ntd, th {\n    padding: 5px;\n}\n\nlabel {\n    color: #222;\n}\n\n.left-align {\n    text-align: left;\n}\n\n.right-align {\n    text-align: right;\n}\n\n.inline-half {\n    display: inline-block;\n    width: 50%;\n}\n\n.page-host {\n    max-width: 800px;\n    margin:    auto;\n}\n\n.group-border {\n    border:  1px solid #aaa;\n    padding: 8px;\n    margin: 10px 0px;\n}\n\n\n.number-widget-minus, .number-widget-plus, .number-widget-input {\n    display: inline-block;\n    border:  1px solid #888;\n    height: 1.5em;\n}\n\n.number-widget-minus, .number-widget-plus {\n    width: 1.5em;\n    text-align: center;\n    background-color: #009688;\n    color: white;\n    cursor: pointer;\n    -webkit-user-select: none;  \n    -moz-user-select: none;    \n    -ms-user-select: none;      \n    user-select: none;\n}\n\n.number-widget-minus {\n    border-radius: 4px 0px 0px 4px;\n    font-weight: bold;\n}\n\n.number-widget-plus {\n    border-radius: 0px 4px 4px 0px;\n}\n\n.number-widget-input {\n    min-width: 2.5em;\n    padding: 0px 5px 0px 8px;\n    text-align: right;\n    border-left: none;\n    border-right: none;\n}\n"; });
 define('text!header.css', ['module'], function(module) { module.exports = ".dheader {\n    position: fixed;\n    top:      0px;\n    z-index:  1;\n    padding:  8px;\n    background-color: white;\n    box-shadow: 0px 2px 5px rgba(0,0,0, 0.3);\n    margin: auto;\n    width: 800px;\n}\n\n.dheader-content {\n    width: 100%;\n}\n\n.header {\n    position: fixed;\n    top: 0;\n    height: 5em;\n    max-width: 800px;\n    width: calc(100% - 15px);\n    z-index: 10;\n}\n\n.header-content {\n    padding: 2px 10px;\n    width: 100%;\n    height: 100%;\n    background-color: #ffdd88;\n    z-index: 10;\n    box-shadow: 0px 2px 8px rgba(0,0,0,0.3);\n}\n\n.header-title {\n    position: absolute;\n    bottom: 15px;\n    font-size: 200%;\n    margin: 4px 0px 0px 10px;\n    \n}\n\n\n@media screen and ( max-width: 830px ){\n    .header {\n        margin-right: 15px;\n    }\n}\n\n.header-score-notification {\n    position:         absolute;\n    top:              -1000px;\n    right:            20vw;\n    padding:          8px;\n    border-radius:    3px;\n    background-color: #fbb;\n    min-width:        2.5em;\n    text-align:       center;\n}\n\n.header-score-notification.au-enter-active { \n  animation: riseAndFade 2.5s; \n  overflow: hidden; \n} \n \n@keyframes riseAndFade { \n    0% {\n        top: 10px;\n        opacity: 1;\n        box-shadow: 0px 0px 4px 2px rgba(255,255,0, 0.8);\n    }\n    10% {\n        box-shadow: 0px 0px 14px 22px rgba(255,255,0, 0.2);\n    }\n    30% {\n        box-shadow: 0px 0px 14px 22px rgba(255,255,0, 0);\n    }\n    100% {\n        top: -10px;\n        opacity: 0;\n        box-shadow: 0px 0px 14px 22px rgba(255,255,0, 0);\n    } \n} \n \n"; });
 define('text!footer.html', ['module'], function(module) { module.exports = "<template><div>My Footer</div></template>"; });
-define('text!group-view.html', ['module'], function(module) { module.exports = "<template><div><md-card if.bind=\"group.border == true\" md-title=\"${group.name}\"><div repeat.for=\"item of group.items\"><compose if.bind=\"item.constructor.name === 'Group'\" model.bind=\"item\" view-model=\"group-view\"></compose><compose if.bind=\"item.constructor.name != 'Group'\" model.bind=\"item\" view-model=\"question-view\"></compose></div></md-card><div if.bind=\"group.border == false\">${group.name}<div repeat.for=\"item of group.items\"><compose if.bind=\"item.constructor.name === 'Group'\" model.bind=\"item\" view-model=\"group-view\"></compose><compose if.bind=\"item.constructor.name != 'Group'\" model.bind=\"item\" view-model=\"question-view\"></compose></div></div></div></template>"; });
-define('text!header.html', ['module'], function(module) { module.exports = "<template><require from=\"header.css\"></require><div class=\"header\"><div class=\"header-content\">Current Score: ${score}<div class=\"header-score-notification au-animate\" repeat.for=\"notification of scoreNotifications\">${notification}</div></div></div></template>"; });
+define('text!group-view.html', ['module'], function(module) { module.exports = "<template><div class=\"container\"><div class=\"form-group\"><div if.bind=\"group.border == true\" class=\"group\"><div repeat.for=\"item of group.items\"><compose if.bind=\"item.constructor.name === 'Group'\" model.bind=\"item\" view-model=\"group-view\"></compose><compose if.bind=\"item.constructor.name != 'Group'\" model.bind=\"item\" view-model=\"question-view\"></compose></div></div><div if.bind=\"group.border == false\">${group.name}<div repeat.for=\"item of group.items\"><compose if.bind=\"item.constructor.name === 'Group'\" model.bind=\"item\" view-model=\"group-view\"></compose><compose if.bind=\"item.constructor.name != 'Group'\" model.bind=\"item\" view-model=\"question-view\"></compose></div></div></div></div></template>"; });
+define('text!header.html', ['module'], function(module) { module.exports = "<template><require from=\"header.css\"></require><nav class=\"navbar navbar-default navbar-fixed-top\"><div class=\"container\"><ul class=\"nav navbar-nav pull-right\"><li class=\"navbar-brand\">Current Score: ${score}</li></ul><div class=\"header-score-notification au-animate\" repeat.for=\"notification of scoreNotifications\">${notification}</div></div></nav></template>"; });
 define('text!home.html', ['module'], function(module) { module.exports = "<template><compose view-model=\"page-view\" model.bind=\"survey.pages[pageIdx]\"></compose><div class=\"inline-half left-align\"><a if.bind=\"pageIdx > 0\" href=\"${router.generate('home', {pageNum: pageIdx})}\">&lt; ${survey.pages[pageIdx-1].name}</a></div><div class=\"inline-half right-align\"><a if.bind=\"survey.pages[pageIdx+1]\" href=\"${router.generate('home', {pageNum: pageIdx+2})}\">${survey.pages[pageIdx+1].name} &gt;</a></div></template>"; });
 define('text!page-view.html', ['module'], function(module) { module.exports = "<template>Page ${page.name}<compose view-model=\"group-view\" model.bind=\"page.group\"></compose></template>"; });
 define('text!question-view.html', ['module'], function(module) { module.exports = "<template><div><compose model.bind=\"question\" view-model=\"./question-widgets/${question.type}-widget\"></compose></div></template>"; });
 define('text!header/score.html', ['module'], function(module) { module.exports = "<template>Score: ${score}</template>"; });
 define('text!question-widgets/checkbox-grid-widget.html', ['module'], function(module) { module.exports = "<template><table><tr><th>Question</th><th repeat.for=\"column of question.columns\">${column.name}</th></tr><tr repeat.for=\"row of question.rows\"><td>${row.name}</td><td repeat.for=\"column of question.columns\"><compose model.bind=\"checkboxes[row.name][column.name]\" view-model=\"./checkbox-widget\"></compose></td></tr></table></template>"; });
-define('text!question-widgets/checkbox-widget.html', ['module'], function(module) { module.exports = "<template><md-checkbox md-filled-in=\"true\" md-checked.bind=\"value\"></md-checkbox></template>"; });
+define('text!question-widgets/checkbox-widget.html', ['module'], function(module) { module.exports = "<template><input type=\"checkbox\" value.bind=\"value\"></template>"; });
 define('text!question-widgets/number-grid-widget.html', ['module'], function(module) { module.exports = "<template><table><tr><th>Question</th><th repeat.for=\"column of question.columns\">${column.name}</th></tr><tr repeat.for=\"row of question.rows\"><td>${row.name}</td><td repeat.for=\"column of question.columns\"><compose model.bind=\"numbers[row.name][column.name]\" view-model=\"./number-widget\"></compose></td></tr></table></template>"; });
 define('text!question-widgets/number-widget.html', ['module'], function(module) { module.exports = "<template><div class=\"number-widget-minus\" click.delegate=\"subtractOne()\">-</div><div class=\"number-widget-input\" innerhtml.bind=\"value\" contenteditable=\"true\"></div><div class=\"number-widget-plus\" click.delegate=\"addOne()\">+</div></template>"; });
-define('text!question-widgets/radio-widget.html', ['module'], function(module) { module.exports = "<template><div repeat.for=\"option of question.options\"><md-radio md-gap=\"true\" md-name=\"${name}\" md-value=\"${$index}\" md-checked.bind=\"value\">${option.name}</md-radio></div></template>"; });
-define('text!question-widgets/select-widget.html', ['module'], function(module) { module.exports = "<template><select md-select=\"label: ${question.name}\" value.bind=\"value\"><option value=\"-1\">--Select ${question.name}--</option><option repeat.for=\"option of question.options\" value=\"${$index}\">${option.name}</option></select></template>"; });
-define('text!question-widgets/text-widget.html', ['module'], function(module) { module.exports = "<template><md-input md-label=\"${name}\" md-value.bind=\"value\"></md-input></template>"; });
+define('text!question-widgets/radio-widget.html', ['module'], function(module) { module.exports = "<template><div repeat.for=\"option of question.options\"><input type=\"radio\" value=\"${$index}\"> ${option.name}</div></template>"; });
+define('text!question-widgets/select-widget.html', ['module'], function(module) { module.exports = "<template><select value.bind=\"value\"><option value=\"-1\">--Select ${question.name}--</option><option repeat.for=\"option of question.options\" value=\"${$index}\">${option.name}</option></select></template>"; });
+define('text!question-widgets/text-widget.html', ['module'], function(module) { module.exports = "<template><input md-label=\"${name}\" value.bind=\"value\"></template>"; });
 //# sourceMappingURL=app-bundle.js.map

@@ -1,10 +1,14 @@
 <template>
   <require from="header.css"></require>
-  <div class="header">
-    <div class="header-content">
-      Current Score: ${score}
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <ul class="nav navbar-nav pull-right">
+        <li class="navbar-brand">
+          Current Score: ${score}
+        </li>
+      </ul>
       <div class="header-score-notification au-animate" repeat.for="notification of scoreNotifications">${notification}</div>
     </div>
-  </div>
+  </nav>
 </template>
   

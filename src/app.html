@@ -1,15 +1,14 @@
 <template>
   <require from="app.css"></require>
 
-  <md-colors md-primary-color="#000000" md-accent-color="#009688"></md-colors>
+  <div class="container">
+    <compose view-model="header"></compose>
 
-  <compose view-model="header"></compose>
+    <div class="page-host">
+      <router-view></router-view> 
+    </div>
 
-  <div class="page-host">
-    <router-view></router-view> 
+    <compose view-model="footer"></compose>
   </div>
-
-  <compose view-model="footer"></compose>
-
 </template> 
 
