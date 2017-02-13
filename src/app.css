@@ -14,8 +14,26 @@
 
 body {
     margin: auto;
-    max-width: 800px;
+    //max-width: 800px;
     margin-top: 50px;
+}
+
+.body-background {
+    position: fixed;
+    top: calc(50px + 20vh);
+    left: 0px;
+    z-index: -1;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.body-background-symbol {
+    color: #b56f6f;
+    opacity: 0.5;
+    font-size: 50vw;
+    text-shadow: 4px 4px 8px rgba(0,0,0,0.8);
+    transform: rotate(30deg);
 }
 
 td, th {
@@ -40,16 +58,43 @@ label {
 }
 
 .page-host {
-    max-width: 800px;
-    margin:    auto;
+    //max-width: 800px;
 }
 
-.group-border {
-    border:  1px solid #aaa;
-    padding: 8px;
+.question {
+    margin: 20px 0px;
+}
+
+.group-with-border {
+    border:  1px solid rgba(181,111,111,0.3);
+    padding: 15px;
+    margin: 10px 0px;
+    box-shadow: 0px 2px 8px rgba(0,0,0, 0.2);
+    background-color: rgba(255,255,255,0.8);
+}
+
+.group-no-border {
+    padding: 0px;
     margin: 10px 0px;
 }
 
+.radio-button {
+    cursor: pointer;
+    align-items: middle;
+    display: flex;
+    margin: 4px 10px;
+}
+
+.radio-circle {
+    font-size: 160%;
+    color: #009688;
+    margin-right: 10px;
+}
+
+.checkbox-box {
+    font-size: 200%;
+    color: #009688;
+}
 
 .number-widget-minus, .number-widget-plus, .number-widget-input {
     display: inline-block;
@@ -72,10 +117,12 @@ label {
 .number-widget-minus {
     border-radius: 4px 0px 0px 4px;
     font-weight: bold;
+    margin-left: 8px;
 }
 
 .number-widget-plus {
     border-radius: 0px 4px 4px 0px;
+    margin-right: 8px;
 }
 
 .number-widget-input {

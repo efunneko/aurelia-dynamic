@@ -5,6 +5,7 @@ export default {
   pages: [
     {
       name: "Page 1",
+      backSymbol: "eye",
       description: "Ask about address",
       group: {
         name:   "Home address",
@@ -92,6 +93,7 @@ export default {
     },
     {
       name: "Page 2",
+      backSymbol: "venus-mars",
       description: "Other details",
       group: {
         name:   "Home address",
@@ -160,6 +162,7 @@ export default {
     },
     {
       name: "Lots of radios",
+      backSymbol: "heart-o",
       description: "Other details",
       group: {
         name:   "Some information",

@@ -1,21 +1,20 @@
 <template>
 
-  <div class="container">
   <div class="form-group">
-    <div if.bind="group.border == true" class="group">
-      <div repeat.for="item of group.items">
-        <compose if.bind="item.constructor.name === 'Group'" model.bind="item" view-model="group-view"></compose>
-        <compose if.bind="item.constructor.name != 'Group'" model.bind="item" view-model="question-view"></compose>
-      </div>
-    </div>
-    <div if.bind="group.border == false">
+    <div if.bind="group.border == true" class="group-with-border">
       ${group.name}
       <div repeat.for="item of group.items">
         <compose if.bind="item.constructor.name === 'Group'" model.bind="item" view-model="group-view"></compose>
         <compose if.bind="item.constructor.name != 'Group'" model.bind="item" view-model="question-view"></compose>
       </div>
     </div>
-  </div>
+    <div if.bind="group.border == false" class="group-no-border">
+      ${group.name}
+      <div repeat.for="item of group.items">
+        <compose if.bind="item.constructor.name === 'Group'" model.bind="item" view-model="group-view"></compose>
+        <compose if.bind="item.constructor.name != 'Group'" model.bind="item" view-model="question-view"></compose>
+      </div>
+    </div>
   </div>
   
 </template>

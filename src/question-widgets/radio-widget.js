@@ -1,13 +1,14 @@
 import {inject, bindable} from 'aurelia-framework';
 import {ScoreBoard} from '../scoreboard';
 
-@inject(ScoreBoard)
+@inject(ScoreBoard, Element)
 export class RadioWidget {
   question = {};
-  @bindable value = "";
+  @bindable value = -1;
 
-  constructor(scoreboard) {
+  constructor(scoreboard, element) {
     this.scoreboard = scoreboard;
+    this.element    = element;
   }
   
   activate(obj) {
@@ -27,4 +28,32 @@ export class RadioWidget {
       scoreData: selected.scoreData
     });
   }
+
+  radioClick(radioButton, index) {
+    this.value = index;
+  }
+
+  attached() {
+    let elements = this.element.getElementsByClassName("radio-button");
+    for(let i = 0; i < elements.length; i++) {
+      let el = elements[i];
+      let self = this;
+      console.log("Adding handler for ", i, el);
+      el.addEventListener('click', function(e) {
+        self.radioClick(el, i);
+      });
+    }
+  }
+
+  detached() {
+    let elements = this.element.getElementsByClassName("radio-button");
+    for(let i = 0; i < elements.length; i++) {
+      let el = elements[i];
+      let self = this;
+      el.removeEventListener('click', function(e) {
+        self.radioClick(el, i);
+      });
+    }
+  }
+
 }

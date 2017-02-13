@@ -1,0 +1,11 @@
+<template>
+
+  <div if.bind="backSymbol" class="body-background">
+    <i class="fa fa-${backSymbol} body-background-symbol"></i>
+  </div>
+
+  <h1>${page.name}</h1>
+
+  <compose view-model="group-view" model.bind="page.group">
+  
+</template>

@@ -1,3 +1,7 @@
 <template>
-  <input type="checkbox"  value.bind="value"></input>
+  <div class="checkbox-widget">
+    <span if.bind="label">${label}</span>
+    <i if.bind="value" class="checkbox-box fa fa-check-square"></i>
+    <i if.bind="!value" class="checkbox-box fa fa-square-o"></i>
+  </div>  
 </template>

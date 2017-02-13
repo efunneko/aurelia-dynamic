@@ -1,13 +1,14 @@
 import {inject, bindable} from 'aurelia-framework';
 import {ScoreBoard} from '../scoreboard';
 
-@inject(ScoreBoard)
+@inject(ScoreBoard, Element)
 export class CheckboxWidget {
   question = {};
-  @bindable value = false;
+  @bindable value;
 
-  constructor(scoreboard) {
+  constructor(scoreboard, element) {
     this.scoreboard = scoreboard;
+    this.element    = element;
   }
   
   activate(obj) {
@@ -27,8 +28,26 @@ export class CheckboxWidget {
       scoreType:  this.question.scoreType
     });
     
+  }  
+
+  boxClick(checkbox) {
+    this.value = this.value ? false : true;
+  }
+  
+  attached() {
+    let self = this;
+    this.element.addEventListener('click', function(e) {
+      self.boxClick();
+    });
   }
 
+  detached() {
+    let self = this;
+    this.element.removeEventListener('click', function(e) {
+      self.boxClick();
+    });
+  }
+  
 };
 
 

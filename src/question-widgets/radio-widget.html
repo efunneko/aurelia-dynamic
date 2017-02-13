@@ -1,7 +1,9 @@
 <template>
   <div repeat.for="option of question.options">
-    <input type="radio" value="${$index}">
-      ${option.name}
-    </input>
+    <div class="radio-button">
+      <i if.bind="value == $index" class="radio-circle fa fa-check-circle"></i>
+      <i if.bind="value != $index" class="radio-circle fa fa-circle-o"></i>
+      <span>${option.name}</span>
+    </div>
   </div>
 </template>
