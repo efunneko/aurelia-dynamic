@@ -1,15 +1,17 @@
 <template>
   <compose view-model="page-view" model.bind="survey.pages[pageIdx]"></compose>
+  <div class="text-center group-with-border">
+    <h2>
+    <a if.bind="survey.pages[pageIdx+1]"
+       href="${router.generate('home', {pageNum: pageIdx+2})}">
+      Next: ${survey.pages[pageIdx+1].name} 
+    </a>
+    </h2>
+  </div>
   <div class="inline-half left-align">
     <a if.bind="pageIdx > 0"
        href="${router.generate('home', {pageNum: pageIdx})}">
       &lt; ${survey.pages[pageIdx-1].name}
-    </a>
-  </div>
-  <div class="inline-half right-align">
-    <a if.bind="survey.pages[pageIdx+1]"
-       href="${router.generate('home', {pageNum: pageIdx+2})}">
-      ${survey.pages[pageIdx+1].name} &gt; 
     </a>
   </div>
 </template>

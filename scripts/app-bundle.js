@@ -65,12 +65,146 @@ define('data-manager',['exports', 'aurelia-framework', 'aurelia-fetch-client', '
       });
     }
 
+    DataManager.prototype.decomposeAchievementRequirement = function decomposeAchievementRequirement(achievement, reqList, req) {
+
+      var question = this.survey.questionIndex[req.name];
+
+      if (!question) {
+        console.log("Achievement requirement name error: ", req.name);
+        return;
+      }
+
+      var matches = req.type.match(/^grid-column-(.*)/);
+      if (matches) {
+        var column = req.column || 0;
+        var type = matches[1];
+
+        for (var _iterator = question.rows, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+          var _ref;
+
+          if (_isArray) {
+            if (_i >= _iterator.length) break;
+            _ref = _iterator[_i++];
+          } else {
+            _i = _iterator.next();
+            if (_i.done) break;
+            _ref = _i.value;
+          }
+
+          var row = _ref;
+
+          var name = question.name + '.' + row.name + '.' + question.columns[column].name;
+          reqList.push({
+            name: name,
+            type: type,
+            value: req.value
+          });
+
+          if (!this.survey.achievementIndex[name]) {
+            this.survey.achievementIndex[name] = [];
+          }
+          this.survey.achievementIndex[name].push(achievement);
+        }
+      }
+    };
+
+    DataManager.prototype.processSurvey = function processSurvey() {
+      this.survey.questionIndex = {};
+      for (var _iterator2 = this.survey.pages, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
+        var _ref2;
+
+        if (_isArray2) {
+          if (_i2 >= _iterator2.length) break;
+          _ref2 = _iterator2[_i2++];
+        } else {
+          _i2 = _iterator2.next();
+          if (_i2.done) break;
+          _ref2 = _i2.value;
+        }
+
+        var page = _ref2;
+
+        this.processSurveyGroup(page.group);
+      }
+
+      this.survey.achievementIndex = {};
+      if (this.survey.achievements) {
+        for (var _iterator3 = this.survey.achievements, _isArray3 = Array.isArray(_iterator3), _i3 = 0, _iterator3 = _isArray3 ? _iterator3 : _iterator3[Symbol.iterator]();;) {
+          var _ref3;
+
+          if (_isArray3) {
+            if (_i3 >= _iterator3.length) break;
+            _ref3 = _iterator3[_i3++];
+          } else {
+            _i3 = _iterator3.next();
+            if (_i3.done) break;
+            _ref3 = _i3.value;
+          }
+
+          var achievement = _ref3;
+
+          var tempReq = achievement.requirements;
+          achievement.requirements = [];
+          for (var _iterator4 = tempReq, _isArray4 = Array.isArray(_iterator4), _i4 = 0, _iterator4 = _isArray4 ? _iterator4 : _iterator4[Symbol.iterator]();;) {
+            var _ref4;
+
+            if (_isArray4) {
+              if (_i4 >= _iterator4.length) break;
+              _ref4 = _iterator4[_i4++];
+            } else {
+              _i4 = _iterator4.next();
+              if (_i4.done) break;
+              _ref4 = _i4.value;
+            }
+
+            var req = _ref4;
+
+            if (!this.survey.achievementIndex[req.name]) {
+              this.survey.achievementIndex[req.name] = [];
+            }
+
+            if (req.type.match(/^grid/)) {
+              this.decomposeAchievementRequirement(achievement, achievement.requirements, req);
+            } else {
+              achievement.requirements.push(req);
+              this.survey.achievementIndex[req.name].push(achievement);
+            }
+          }
+        }
+      }
+    };
+
+    DataManager.prototype.processSurveyGroup = function processSurveyGroup(group) {
+
+      for (var _iterator5 = group.items, _isArray5 = Array.isArray(_iterator5), _i5 = 0, _iterator5 = _isArray5 ? _iterator5 : _iterator5[Symbol.iterator]();;) {
+        var _ref5;
+
+        if (_isArray5) {
+          if (_i5 >= _iterator5.length) break;
+          _ref5 = _iterator5[_i5++];
+        } else {
+          _i5 = _iterator5.next();
+          if (_i5.done) break;
+          _ref5 = _i5.value;
+        }
+
+        var item = _ref5;
+
+        if (item.type === "group") {
+          this.processSurveyGroup(item);
+        } else {
+          this.survey.questionIndex[item.name] = item;
+        }
+      }
+    };
+
     DataManager.prototype.getSurvey = function getSurvey() {
       var _this = this;
 
       return new Promise(function (resolve, reject) {
         if (!_this.survey) {
           _this.survey = _survey.Survey.fromObject(_surveyData2.default);
+          _this.processSurvey();
         }
         resolve(_this.survey);
       });
@@ -383,8 +517,8 @@ define('question-view',["exports"], function (exports) {
 
   ;
 });
-define('scoreboard',["exports", "./models/answer", "aurelia-framework"], function (exports, _answer, _aureliaFramework) {
-  "use strict";
+define('scoreboard',['exports', './models/answer', 'aurelia-framework', './data-manager'], function (exports, _answer, _aureliaFramework, _dataManager) {
+  'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -397,15 +531,24 @@ define('scoreboard',["exports", "./models/answer", "aurelia-framework"], functio
     }
   }
 
-  var ScoreBoard = exports.ScoreBoard = function () {
-    function ScoreBoard() {
+  var _dec, _class;
+
+  var ScoreBoard = exports.ScoreBoard = (_dec = (0, _aureliaFramework.inject)(_dataManager.DataManager), _dec(_class = function () {
+    function ScoreBoard(dataManager) {
+      var _this = this;
+
       _classCallCheck(this, ScoreBoard);
 
       this.answers = {};
+      this.achievements = {};
       this.notifications = [];
+      this.achievementNotifications = [];
       this.totalScore = 0;
 
-      console.log("New scoreboard");
+      this.dataManager = dataManager;
+      this.dataManager.getSurvey().then(function (survey) {
+        _this.survey = survey;
+      });
     }
 
     ScoreBoard.prototype.answerQuestion = function answerQuestion(answer) {
@@ -423,25 +566,121 @@ define('scoreboard',["exports", "./models/answer", "aurelia-framework"], functio
       if (lastDelta != 0) {
         this.addScoreChangeNotification(lastDelta);
       }
+
+      this.checkAchievements(ansObj);
     };
 
     ScoreBoard.prototype.getAnswer = function getAnswer(questionName) {
       return this.answers[questionName];
     };
 
+    ScoreBoard.prototype.checkAchievements = function checkAchievements(answer) {
+
+      if (!this.survey) {
+        return;
+      }
+
+      if (this.survey.achievementIndex[answer.name]) {
+        for (var _iterator = this.survey.achievementIndex[answer.name], _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+          var _ref;
+
+          if (_isArray) {
+            if (_i >= _iterator.length) break;
+            _ref = _iterator[_i++];
+          } else {
+            _i = _iterator.next();
+            if (_i.done) break;
+            _ref = _i.value;
+          }
+
+          var achievement = _ref;
+
+          var allReqsMet = true;
+          for (var _iterator2 = achievement.requirements, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
+            var _ref2;
+
+            if (_isArray2) {
+              if (_i2 >= _iterator2.length) break;
+              _ref2 = _iterator2[_i2++];
+            } else {
+              _i2 = _iterator2.next();
+              if (_i2.done) break;
+              _ref2 = _i2.value;
+            }
+
+            var requirement = _ref2;
+
+            if (answer.name === requirement.name) {
+              requirement.met = this.doesPassAchievementRequirement(answer, requirement);
+            }
+            if (!requirement.met) {
+              allReqsMet = false;
+            }
+          }
+
+          var scoreDelta = 0;
+          if (!this.achievements[achievement.name] && allReqsMet) {
+            console.log("Got achievement: ", achievement.name);
+            scoreDelta = achievement.score;
+            this.addAchievementChangeNotification(achievement);
+          } else if (this.achievements[achievement.name] && !allReqsMet) {
+            console.log("Lost achievement: ", achievement.name);
+            scoreDelta = -achievement.score;
+          }
+          this.achievements[achievement.name] = allReqsMet;
+
+          if (scoreDelta) {
+            this.totalScore += scoreDelta;
+            this.addScoreChangeNotification(scoreDelta);
+          }
+        }
+      }
+    };
+
+    ScoreBoard.prototype.doesPassAchievementRequirement = function doesPassAchievementRequirement(answer, requirement) {
+      if (requirement.type === "greater-than") {
+        if (answer.score > requirement.value) {
+          return true;
+        }
+        return false;
+      } else if (requirement.type === "less-than") {
+        if (answer.score < requirement.value) {
+          return true;
+        }
+        return false;
+      } else if (requirement.type === "equal") {
+        if (answer.score === requirement.value) {
+          return true;
+        }
+        return false;
+      }
+      return false;
+    };
+
     ScoreBoard.prototype.addScoreChangeNotification = function addScoreChangeNotification(amount) {
-      var _this = this;
+      var _this2 = this;
 
       var notification = amount < 0 ? amount.toString() : "+" + amount.toString();
       this.notifications.push(notification);
       setTimeout(function () {
-        _this.notifications.splice(0, 1);
+        _this2.notifications.splice(0, 1);
+      }, 2500);
+      console.log(this.notifications);
+    };
+
+    ScoreBoard.prototype.addAchievementChangeNotification = function addAchievementChangeNotification(achievement) {
+      var _this3 = this;
+
+      var notification = 'New achievement: ' + achievement.name;
+      this.achievementNotifications.push(notification);
+      setTimeout(function () {
+        _this3.achievementNotifications.splice(0, 1);
       }, 2500);
       console.log(this.notifications);
     };
 
     return ScoreBoard;
-  }();
+  }()) || _class);
 });
 define('survey-data',["exports"], function (exports) {
   "use strict";
@@ -452,6 +691,21 @@ define('survey-data',["exports"], function (exports) {
   exports.default = {
     name: "This is a test survey",
     description: "Ask about this and that",
+    achievements: [{
+      name: "Test 1",
+      score: 5,
+      level: "common",
+      requirements: [{
+        name: "number-input",
+        type: "greater-than",
+        value: 5
+      }, {
+        name: "number-grid",
+        type: "grid-column-greater-than",
+        column: 0,
+        value: 0
+      }]
+    }],
     pages: [{
       name: "Page 1",
       backSymbol: "eye",
@@ -603,6 +857,228 @@ define('header/score',['exports', 'aurelia-framework', '../scoreboard'], functio
 
     return SelectWidget;
   }()) || _class);
+});
+define('models/answer',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Answer = exports.Answer = function () {
+    function Answer() {
+      _classCallCheck(this, Answer);
+
+      this.name = "";
+      this.value = null;
+      this.score = null;
+    }
+
+    Answer.fromObject = function fromObject(src) {
+      var obj = Object.assign(new Answer(), src);
+      obj.computeScore();
+      return obj;
+    };
+
+    Answer.prototype.computeScore = function computeScore() {
+      if (!this.scoreType) {
+        this.score = this.value ? this.scoreData : 0;
+      } else if (this.scoreType == "scale") {
+        var lastUpTo = 0;
+        var score = 0;
+        for (var _iterator = this.scoreData, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+          var _ref;
+
+          if (_isArray) {
+            if (_i >= _iterator.length) break;
+            _ref = _iterator[_i++];
+          } else {
+            _i = _iterator.next();
+            if (_i.done) break;
+            _ref = _i.value;
+          }
+
+          var entry = _ref;
+
+          var numToAdd = void 0;
+          if (this.value > entry.upTo) {
+            score += (entry.upTo - lastUpTo) * entry.scale;
+          } else {
+            score += (this.value - lastUpTo) * entry.scale;
+            break;
+          }
+          lastUpTo = entry.upTo;
+          console.log(entry, score);
+        }
+        this.score = score;
+      }
+    };
+
+    return Answer;
+  }();
+});
+define('models/group',["exports", "./question"], function (exports, _question) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Group = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Group = exports.Group = function () {
+    function Group() {
+      _classCallCheck(this, Group);
+
+      this.name = "";
+      this.border = false;
+      this.items = [];
+    }
+
+    Group.fromObject = function fromObject(src) {
+      var group = Object.assign(new Group(), src);
+      var tmpItems = group.items;
+      console.log(tmpItems);
+      group.items = [];
+      console.log(tmpItems);
+      for (var _iterator = tmpItems, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+        var _ref;
+
+        if (_isArray) {
+          if (_i >= _iterator.length) break;
+          _ref = _iterator[_i++];
+        } else {
+          _i = _iterator.next();
+          if (_i.done) break;
+          _ref = _i.value;
+        }
+
+        var item = _ref;
+
+        if (item.type === "group") {
+          group.items.push(Group.fromObject(item));
+        } else {
+          console.log("Adding quest", item);
+          group.items.push(_question.Question.fromObject(item));
+        }
+      }
+      return group;
+    };
+
+    return Group;
+  }();
+});
+define('models/page',["exports", "./group"], function (exports, _group) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Page = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Page = exports.Page = function () {
+    function Page() {
+      _classCallCheck(this, Page);
+
+      this.name = "";
+      this.description = "";
+      this.group = {};
+    }
+
+    Page.fromObject = function fromObject(src) {
+      var page = Object.assign(new Page(), src);
+      page.group = _group.Group.fromObject(page.group);
+      return page;
+    };
+
+    return Page;
+  }();
+});
+define('models/question',['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Question = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Question = exports.Question = function () {
+    function Question(scoreboard) {
+      _classCallCheck(this, Question);
+
+      this.scoreboard = scoreboard;
+    }
+
+    Question.fromObject = function fromObject(src) {
+      var obj = Object.assign(new Question(), src);
+      obj.learnAnswer();
+      return obj;
+    };
+
+    Question.prototype.learnAnswer = function learnAnswer() {};
+
+    Question.prototype.answerQuestion = function answerQuestion(answer) {
+      this.answer = Answer.fromObject(answer);
+      this.scoreboard(this.answer);
+    };
+
+    return Question;
+  }();
+});
+define('models/survey',["exports", "./page"], function (exports, _page) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Survey = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Survey = exports.Survey = function () {
+    function Survey() {
+      _classCallCheck(this, Survey);
+
+      this.name = "";
+      this.description = "";
+      this.pages = [];
+    }
+
+    Survey.fromObject = function fromObject(src) {
+      var survey = Object.assign(new Survey(), src);
+      survey.pages = survey.pages.map(_page.Page.fromObject);
+      return survey;
+    };
+
+    return Survey;
+  }();
 });
 define('question-widgets/checkbox-grid-widget',["exports"], function (exports) {
   "use strict";
@@ -1121,7 +1597,6 @@ define('question-widgets/radio-widget',['exports', 'aurelia-framework', '../scor
       var _loop = function _loop(i) {
         var el = elements[i];
         var self = _this;
-        console.log("Adding handler for ", i, el);
         el.addEventListener('click', function (e) {
           self.radioClick(el, i);
         });
@@ -1300,244 +1775,23 @@ define('resources/index',["exports"], function (exports) {
   exports.configure = configure;
   function configure(config) {}
 });
-define('models/answer',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var Answer = exports.Answer = function () {
-    function Answer() {
-      _classCallCheck(this, Answer);
-
-      this.name = "";
-      this.value = null;
-      this.score = null;
-    }
-
-    Answer.fromObject = function fromObject(src) {
-      var obj = Object.assign(new Answer(), src);
-      obj.computeScore();
-      return obj;
-    };
-
-    Answer.prototype.computeScore = function computeScore() {
-      if (!this.scoreType) {
-        this.score = this.value ? this.scoreData : 0;
-      } else if (this.scoreType == "scale") {
-        var lastUpTo = 0;
-        var score = 0;
-        for (var _iterator = this.scoreData, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
-          var _ref;
-
-          if (_isArray) {
-            if (_i >= _iterator.length) break;
-            _ref = _iterator[_i++];
-          } else {
-            _i = _iterator.next();
-            if (_i.done) break;
-            _ref = _i.value;
-          }
-
-          var entry = _ref;
-
-          var numToAdd = void 0;
-          if (this.value > entry.upTo) {
-            score += (entry.upTo - lastUpTo) * entry.scale;
-          } else {
-            score += (this.value - lastUpTo) * entry.scale;
-            break;
-          }
-          lastUpTo = entry.upTo;
-          console.log(entry, score);
-        }
-        this.score = score;
-      }
-    };
-
-    return Answer;
-  }();
-});
-define('models/group',["exports", "./question"], function (exports, _question) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.Group = undefined;
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var Group = exports.Group = function () {
-    function Group() {
-      _classCallCheck(this, Group);
-
-      this.name = "";
-      this.border = false;
-      this.items = [];
-    }
-
-    Group.fromObject = function fromObject(src) {
-      var group = Object.assign(new Group(), src);
-      var tmpItems = group.items;
-      console.log(tmpItems);
-      group.items = [];
-      console.log(tmpItems);
-      for (var _iterator = tmpItems, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
-        var _ref;
-
-        if (_isArray) {
-          if (_i >= _iterator.length) break;
-          _ref = _iterator[_i++];
-        } else {
-          _i = _iterator.next();
-          if (_i.done) break;
-          _ref = _i.value;
-        }
-
-        var item = _ref;
-
-        if (item.type === "group") {
-          group.items.push(Group.fromObject(item));
-        } else {
-          console.log("Adding quest", item);
-          group.items.push(_question.Question.fromObject(item));
-        }
-      }
-      return group;
-    };
-
-    return Group;
-  }();
-});
-define('models/page',["exports", "./group"], function (exports, _group) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.Page = undefined;
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var Page = exports.Page = function () {
-    function Page() {
-      _classCallCheck(this, Page);
-
-      this.name = "";
-      this.description = "";
-      this.group = {};
-    }
-
-    Page.fromObject = function fromObject(src) {
-      var page = Object.assign(new Page(), src);
-      page.group = _group.Group.fromObject(page.group);
-      return page;
-    };
-
-    return Page;
-  }();
-});
-define('models/question',['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.Question = undefined;
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var Question = exports.Question = function () {
-    function Question(scoreboard) {
-      _classCallCheck(this, Question);
-
-      this.scoreboard = scoreboard;
-    }
-
-    Question.fromObject = function fromObject(src) {
-      var obj = Object.assign(new Question(), src);
-      obj.learnAnswer();
-      return obj;
-    };
-
-    Question.prototype.learnAnswer = function learnAnswer() {};
-
-    Question.prototype.answerQuestion = function answerQuestion(answer) {
-      this.answer = Answer.fromObject(answer);
-      this.scoreboard(this.answer);
-    };
-
-    return Question;
-  }();
-});
-define('models/survey',["exports", "./page"], function (exports, _page) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.Survey = undefined;
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var Survey = exports.Survey = function () {
-    function Survey() {
-      _classCallCheck(this, Survey);
-
-      this.name = "";
-      this.description = "";
-      this.pages = [];
-    }
-
-    Survey.fromObject = function fromObject(src) {
-      var survey = Object.assign(new Survey(), src);
-      survey.pages = survey.pages.map(_page.Page.fromObject);
-      return survey;
-    };
-
-    return Survey;
-  }();
-});
-define('text!app.html', ['module'], function(module) { module.exports = "<template><require from=\"app.css\"></require><div class=\"container\"><compose view-model=\"header\"></compose><div class=\"page-host\"><router-view></router-view></div><compose view-model=\"footer\"></compose></div></template>"; });
-define('text!app.css', ['module'], function(module) { module.exports = "/*\n@media screen and ( min-width: 320px ){\n    html {\n        font-size: 150%;\n    }\n}\n\n@media screen and ( max-width: 830px ){\n    body {\n        margin: 50px 15px 0 15px;\n    }\n}\n*/\n\nbody {\n    margin: auto;\n    //max-width: 800px;\n    margin-top: 50px;\n}\n\n.body-background {\n    position: fixed;\n    top: calc(50px + 20vh);\n    left: 0px;\n    z-index: -1;\n    width: 100%;\n    text-align: center;\n    vertical-align: middle;\n}\n\n.body-background-symbol {\n    color: #b56f6f;\n    opacity: 0.5;\n    font-size: 50vw;\n    text-shadow: 4px 4px 8px rgba(0,0,0,0.8);\n    transform: rotate(30deg);\n}\n\ntd, th {\n    padding: 5px;\n}\n\nlabel {\n    color: #222;\n}\n\n.left-align {\n    text-align: left;\n}\n\n.right-align {\n    text-align: right;\n}\n\n.inline-half {\n    display: inline-block;\n    width: 50%;\n}\n\n.page-host {\n    //max-width: 800px;\n}\n\n.question {\n    margin: 20px 0px;\n}\n\n.group-with-border {\n    border:  1px solid rgba(181,111,111,0.3);\n    padding: 15px;\n    margin: 10px 0px;\n    box-shadow: 0px 2px 8px rgba(0,0,0, 0.2);\n    background-color: rgba(255,255,255,0.8);\n}\n\n.group-no-border {\n    padding: 0px;\n    margin: 10px 0px;\n}\n\n.radio-button {\n    cursor: pointer;\n    align-items: middle;\n    display: flex;\n    margin: 4px 10px;\n}\n\n.radio-circle {\n    font-size: 160%;\n    color: #009688;\n    margin-right: 10px;\n}\n\n.checkbox-box {\n    font-size: 200%;\n    color: #009688;\n}\n\n.number-widget-minus, .number-widget-plus, .number-widget-input {\n    display: inline-block;\n    border:  1px solid #888;\n    height: 1.5em;\n}\n\n.number-widget-minus, .number-widget-plus {\n    width: 1.5em;\n    text-align: center;\n    background-color: #009688;\n    color: white;\n    cursor: pointer;\n    -webkit-user-select: none;  \n    -moz-user-select: none;    \n    -ms-user-select: none;      \n    user-select: none;\n}\n\n.number-widget-minus {\n    border-radius: 4px 0px 0px 4px;\n    font-weight: bold;\n    margin-left: 8px;\n}\n\n.number-widget-plus {\n    border-radius: 0px 4px 4px 0px;\n    margin-right: 8px;\n}\n\n.number-widget-input {\n    min-width: 2.5em;\n    padding: 0px 5px 0px 8px;\n    text-align: right;\n    border-left: none;\n    border-right: none;\n}\n"; });
-define('text!footer.html', ['module'], function(module) { module.exports = "<template><div>My Footer</div></template>"; });
-define('text!header.css', ['module'], function(module) { module.exports = ".dheader {\n    position: fixed;\n    top:      0px;\n    z-index:  1;\n    padding:  8px;\n    background-color: white;\n    box-shadow: 0px 2px 5px rgba(0,0,0, 0.3);\n    margin: auto;\n    width: 800px;\n}\n\n.dheader-content {\n    width: 100%;\n}\n\n.header {\n    position: fixed;\n    top: 0;\n    height: 5em;\n    max-width: 800px;\n    width: calc(100% - 15px);\n    z-index: 10;\n}\n\n.header-content {\n    padding: 2px 10px;\n    width: 100%;\n    height: 100%;\n    background-color: #ffdd88;\n    z-index: 10;\n    box-shadow: 0px 2px 8px rgba(0,0,0,0.3);\n}\n\n.header-title {\n    position: absolute;\n    bottom: 15px;\n    font-size: 200%;\n    margin: 4px 0px 0px 10px;\n    \n}\n\n\n@media screen and ( max-width: 830px ){\n    .header {\n        margin-right: 15px;\n    }\n}\n\n.header-score-notification {\n    position:         absolute;\n    top:              -1000px;\n    right:            20vw;\n    padding:          8px;\n    border-radius:    3px;\n    background-color: #fbb;\n    min-width:        2.5em;\n    text-align:       center;\n}\n\n.header-score-notification.au-enter-active { \n  animation: riseAndFade 2.5s; \n  overflow: hidden; \n} \n \n@keyframes riseAndFade { \n    0% {\n        top: 10px;\n        opacity: 1;\n        box-shadow: 0px 0px 4px 2px rgba(255,255,0, 0.8);\n    }\n    10% {\n        box-shadow: 0px 0px 14px 22px rgba(255,255,0, 0.2);\n    }\n    30% {\n        box-shadow: 0px 0px 14px 22px rgba(255,255,0, 0);\n    }\n    100% {\n        top: -10px;\n        opacity: 0;\n        box-shadow: 0px 0px 14px 22px rgba(255,255,0, 0);\n    } \n} \n \n"; });
+define('text!app.html', ['module'], function(module) { module.exports = "<template><require from=\"app.css\"></require><div class=\"container\"><compose view-model=\"header\"></compose><div class=\"page-host\"><router-view></router-view></div></div></template>"; });
+define('text!app.css', ['module'], function(module) { module.exports = "/*\n@media screen and ( min-width: 320px ){\n    html {\n        font-size: 150%;\n    }\n}\n\n@media screen and ( max-width: 830px ){\n    body {\n        margin: 50px 15px 0 15px;\n    }\n}\n*/\n\nbody {\n    margin: auto;\n    //max-width: 800px;\n    margin-top: 50px;\n}\n\n.body-background {\n    position: fixed;\n    top: calc(50px + 20vh);\n    left: 0px;\n    z-index: -1;\n    width: 100%;\n    text-align: center;\n    vertical-align: middle;\n}\n\n.body-background-symbol {\n    color: #b56f6f;\n    opacity: 0.5;\n    font-size: 50vw;\n    text-shadow: 4px 4px 8px rgba(0,0,0,0.8);\n    transform: rotate(30deg);\n}\n\ntd, th {\n    padding: 5px;\n}\n\nlabel {\n    color: #222;\n}\n\n.left-align {\n    text-align: left;\n}\n\n.right-align {\n    text-align: right;\n}\n\n.inline-half {\n    display: inline-block;\n    width: 50%;\n}\n\n.page-host {\n    //max-width: 800px;\n}\n\n.question {\n    margin: 20px 0px;\n}\n\n.group-with-border {\n    border:  1px solid rgba(181,111,111,0.3);\n    padding: 15px;\n    margin: 10px 0px;\n    box-shadow: 0px 2px 8px rgba(0,0,0, 0.2);\n    background-color: rgba(255,255,255,0.8);\n}\n\n.group-no-border {\n    padding: 0px;\n    margin: 10px 0px;\n}\n\n.radio-button {\n    cursor: pointer;\n    align-items: middle;\n    display: flex;\n    margin: 4px 10px;\n}\n\n.radio-circle {\n    font-size: 160%;\n    color: #009688;\n    margin-right: 10px;\n}\n\n.checkbox-box {\n    font-size: 200%;\n    color: #009688;\n}\n\n.number-widget-minus, .number-widget-plus, .number-widget-input {\n    vertical-align: top;\n    display: inline-block;\n    border:  1px solid #888;\n    height: 100%;\n}\n\n.number-widget-minus, .number-widget-plus {\n    width: 1.5em;\n    text-align: center;\n    background-color: #009688;\n    color: white;\n    cursor: pointer;\n    -webkit-user-select: none;  \n    -moz-user-select: none;    \n    -ms-user-select: none;      \n    user-select: none;\n}\n\n.number-widget-minus {\n    border-radius: 4px 0px 0px 4px;\n    font-weight: bold;\n    margin-left: 8px;\n}\n\n.number-widget-plus {\n    border-radius: 0px 4px 4px 0px;\n    margin-right: 8px;\n}\n\n.number-widget-action {\n    font-size: 90%;\n}\n\n.number-widget-input {\n    min-width: 2.5em;\n    padding: 0px 5px 0px 8px;\n    text-align: right;\n    border-left: none;\n    border-right: none;\n}\n"; });
+define('text!footer.html', ['module'], function(module) { module.exports = "<template><require from=\"footer.css\"></require><nav class=\"footer navbar navbar-default navbar-fixed-bottom\"><div class=\"container\"><ul class=\"nav navbar-nav pull-left\">${message}</ul></div></nav></template>"; });
+define('text!footer.css', ['module'], function(module) { module.exports = ".footer {\n    color: white;\n    min-height: 20px;\n}"; });
 define('text!group-view.html', ['module'], function(module) { module.exports = "<template><div class=\"form-group\"><div if.bind=\"group.border == true\" class=\"group-with-border\">${group.name}<div repeat.for=\"item of group.items\"><compose if.bind=\"item.constructor.name === 'Group'\" model.bind=\"item\" view-model=\"group-view\"></compose><compose if.bind=\"item.constructor.name != 'Group'\" model.bind=\"item\" view-model=\"question-view\"></compose></div></div><div if.bind=\"group.border == false\" class=\"group-no-border\">${group.name}<div repeat.for=\"item of group.items\"><compose if.bind=\"item.constructor.name === 'Group'\" model.bind=\"item\" view-model=\"group-view\"></compose><compose if.bind=\"item.constructor.name != 'Group'\" model.bind=\"item\" view-model=\"question-view\"></compose></div></div></div></template>"; });
+define('text!header.css', ['module'], function(module) { module.exports = ".dheader {\n    position: fixed;\n    top:      0px;\n    z-index:  1;\n    padding:  8px;\n    background-color: white;\n    box-shadow: 0px 2px 5px rgba(0,0,0, 0.3);\n    margin: auto;\n    width: 800px;\n}\n\n.dheader-content {\n    width: 100%;\n}\n\n.header {\n    position: fixed;\n    top: 0;\n    height: 5em;\n    max-width: 800px;\n    width: calc(100% - 15px);\n    z-index: 10;\n}\n\n.header-content {\n    padding: 2px 10px;\n    width: 100%;\n    height: 100%;\n    background-color: #ffdd88;\n    z-index: 10;\n    box-shadow: 0px 2px 8px rgba(0,0,0,0.3);\n}\n\n.header-title {\n    position: absolute;\n    bottom: 15px;\n    font-size: 200%;\n    margin: 4px 0px 0px 10px;\n    \n}\n\n\n@media screen and ( max-width: 830px ){\n    .header {\n        margin-right: 15px;\n    }\n}\n\n.header-score-notification {\n    position:         absolute;\n    top:              -1000px;\n    right:            20vw;\n    padding:          8px;\n    border-radius:    3px;\n    background-color: #fbb;\n    min-width:        2.5em;\n    text-align:       center;\n}\n\n.header-score-notification.au-enter-active { \n  animation: riseAndFade 2.5s; \n  overflow: hidden; \n} \n \n@keyframes riseAndFade { \n    0% {\n        top: 10px;\n        opacity: 1;\n        box-shadow: 0px 0px 4px 2px rgba(255,255,155, 0.8);\n    }\n    10% {\n        box-shadow: 0px 0px 14px 22px rgba(255,255,0, 0.2);\n    }\n    30% {\n        box-shadow: 0px 0px 14px 22px rgba(255,255,0, 0);\n    }\n    100% {\n        top: -10px;\n        opacity: 0;\n        box-shadow: 0px 0px 14px 22px rgba(255,255,0, 0);\n    } \n} \n \n"; });
 define('text!header.html', ['module'], function(module) { module.exports = "<template><require from=\"header.css\"></require><nav class=\"navbar navbar-default navbar-fixed-top\"><div class=\"container\"><ul class=\"nav navbar-nav pull-right\"><li class=\"navbar-brand\">Current Score: ${score}</li></ul><div class=\"header-score-notification au-animate\" repeat.for=\"notification of scoreNotifications\">${notification}</div></div></nav></template>"; });
-define('text!home.html', ['module'], function(module) { module.exports = "<template><compose view-model=\"page-view\" model.bind=\"survey.pages[pageIdx]\"></compose><div class=\"inline-half left-align\"><a if.bind=\"pageIdx > 0\" href=\"${router.generate('home', {pageNum: pageIdx})}\">&lt; ${survey.pages[pageIdx-1].name}</a></div><div class=\"inline-half right-align\"><a if.bind=\"survey.pages[pageIdx+1]\" href=\"${router.generate('home', {pageNum: pageIdx+2})}\">${survey.pages[pageIdx+1].name} &gt;</a></div></template>"; });
+define('text!home.html', ['module'], function(module) { module.exports = "<template><compose view-model=\"page-view\" model.bind=\"survey.pages[pageIdx]\"></compose><div class=\"text-center group-with-border\"><h2><a if.bind=\"survey.pages[pageIdx+1]\" href=\"${router.generate('home', {pageNum: pageIdx+2})}\">Next: ${survey.pages[pageIdx+1].name}</a></h2></div><div class=\"inline-half left-align\"><a if.bind=\"pageIdx > 0\" href=\"${router.generate('home', {pageNum: pageIdx})}\">&lt; ${survey.pages[pageIdx-1].name}</a></div></template>"; });
 define('text!page-view.html', ['module'], function(module) { module.exports = "<template><div if.bind=\"page.backSymbol\" class=\"body-background\"><i class=\"fa fa-${page.backSymbol} body-background-symbol\"></i></div><h1>${page.name}</h1><compose view-model=\"group-view\" model.bind=\"page.group\"></compose></template>"; });
+define('text!page.html', ['module'], function(module) { module.exports = "<template><div if.bind=\"backSymbol\" class=\"body-background\"><i class=\"fa fa-${backSymbol} body-background-symbol\"></i></div><h1>${page.name}</h1><compose view-model=\"group-view\" model.bind=\"page.group\"></compose></template>"; });
 define('text!question-view.html', ['module'], function(module) { module.exports = "<template><div class=\"question\"><compose model.bind=\"question\" view-model=\"./question-widgets/${question.type}-widget\"></compose></div></template>"; });
 define('text!header/score.html', ['module'], function(module) { module.exports = "<template>Score: ${score}</template>"; });
 define('text!question-widgets/checkbox-grid-widget.html', ['module'], function(module) { module.exports = "<template><table><tr><th>Question</th><th repeat.for=\"column of question.columns\" class=\"text-center\">${column.name}</th></tr><tr repeat.for=\"row of question.rows\"><td>${row.name}</td><td repeat.for=\"column of question.columns\" class=\"text-center\"><compose model.bind=\"checkboxes[row.name][column.name]\" view-model=\"./checkbox-widget\"></compose></td></tr></table></template>"; });
 define('text!question-widgets/checkbox-widget.html', ['module'], function(module) { module.exports = "<template><div class=\"checkbox-widget\"><span if.bind=\"label\">${label}</span> <i if.bind=\"value\" class=\"checkbox-box fa fa-check-square\"></i> <i if.bind=\"!value\" class=\"checkbox-box fa fa-square-o\"></i></div></template>"; });
 define('text!question-widgets/number-grid-widget.html', ['module'], function(module) { module.exports = "<template><table><tr><th>Question</th><th repeat.for=\"column of question.columns\" class=\"text-center\">${column.name}</th></tr><tr repeat.for=\"row of question.rows\"><td>${row.name}</td><td repeat.for=\"column of question.columns\" class=\"text-center\"><compose model.bind=\"numbers[row.name][column.name]\" view-model=\"./number-widget\"></compose></td></tr></table></template>"; });
-define('text!question-widgets/number-widget.html', ['module'], function(module) { module.exports = "<template><div class=\"number-widget-minus\" click.delegate=\"subtractOne()\">-</div><div class=\"number-widget-input\" innerhtml.bind=\"value\" contenteditable=\"true\"></div><div class=\"number-widget-plus\" click.delegate=\"addOne()\">+</div></template>"; });
+define('text!question-widgets/number-widget.html', ['module'], function(module) { module.exports = "<template><div class=\"number-widget-minus\" click.delegate=\"subtractOne()\"><i class=\"fa fa-minus number-widget-action\"></i></div><div class=\"number-widget-input\" innerhtml.bind=\"value\" contenteditable=\"true\"></div><div class=\"number-widget-plus\" click.delegate=\"addOne()\"><i class=\"fa fa-plus number-widget-action\" aria-hidden=\"true\"></i></div></template>"; });
 define('text!question-widgets/radio-widget.html', ['module'], function(module) { module.exports = "<template><div repeat.for=\"option of question.options\"><div class=\"radio-button\"><i if.bind=\"value == $index\" class=\"radio-circle fa fa-check-circle\"></i> <i if.bind=\"value != $index\" class=\"radio-circle fa fa-circle-o\"></i> <span>${option.name}</span></div></div></template>"; });
 define('text!question-widgets/select-widget.html', ['module'], function(module) { module.exports = "<template><select value.bind=\"value\"><option value=\"-1\">--Select ${question.name}--</option><option repeat.for=\"option of question.options\" value=\"${$index}\">${option.name}</option></select></template>"; });
 define('text!question-widgets/text-widget.html', ['module'], function(module) { module.exports = "<template><input md-label=\"${name}\" value.bind=\"value\"></template>"; });
-define('text!page.html', ['module'], function(module) { module.exports = "<template><div if.bind=\"backSymbol\" class=\"body-background\"><i class=\"fa fa-${backSymbol} body-background-symbol\"></i></div><h1>${page.name}</h1><compose view-model=\"group-view\" model.bind=\"page.group\"></compose></template>"; });
 //# sourceMappingURL=app-bundle.js.map

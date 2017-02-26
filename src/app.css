@@ -97,9 +97,10 @@ label {
 }
 
 .number-widget-minus, .number-widget-plus, .number-widget-input {
+    vertical-align: top;
     display: inline-block;
     border:  1px solid #888;
-    height: 1.5em;
+    height: 100%;
 }
 
 .number-widget-minus, .number-widget-plus {
@@ -123,6 +124,10 @@ label {
 .number-widget-plus {
     border-radius: 0px 4px 4px 0px;
     margin-right: 8px;
+}
+
+.number-widget-action {
+    font-size: 90%;
 }
 
 .number-widget-input {

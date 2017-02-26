@@ -2,6 +2,26 @@
 export default {
   name: "This is a test survey",
   description: "Ask about this and that",
+  achievements: [
+    {
+      name: "Test 1",
+      score: 5,
+      level: "common",
+      requirements: [
+        {
+          name: "number-input",
+          type: "greater-than",
+          value: 5
+        },
+        {
+          name: "number-grid",
+          type: "grid-column-greater-than",
+          column: 0,
+          value: 0
+        }
+      ]
+    }
+  ],
   pages: [
     {
       name: "Page 1",

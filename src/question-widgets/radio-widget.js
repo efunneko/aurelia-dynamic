@@ -38,7 +38,6 @@ export class RadioWidget {
     for(let i = 0; i < elements.length; i++) {
       let el = elements[i];
       let self = this;
-      console.log("Adding handler for ", i, el);
       el.addEventListener('click', function(e) {
         self.radioClick(el, i);
       });
