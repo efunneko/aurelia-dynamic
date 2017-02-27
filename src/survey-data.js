@@ -11,13 +11,13 @@ export default {
         {
           name: "number-input",
           type: "greater-than",
-          value: 5
+          value: 0
         },
         {
           name: "number-grid",
           type: "grid-column-greater-than",
           column: 0,
-          value: 0
+          value: -1
         }
       ]
     }

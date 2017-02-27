@@ -18,4 +18,10 @@ export class Header {
     return this.scoreboard.notifications;
   }
 
+    @computedFrom('scoreboard.achievementNotifications')
+    get achievementNotifications() {
+        console.log("Getting achievements");
+        return this.scoreboard.achievementNotifications;
+    }
+    
 }

@@ -344,9 +344,9 @@ define('header',["exports", "aurelia-framework", "./scoreboard"], function (expo
     return desc;
   }
 
-  var _dec, _dec2, _dec3, _class, _desc, _value, _class2;
+  var _dec, _dec2, _dec3, _dec4, _class, _desc, _value, _class2;
 
-  var Header = exports.Header = (_dec = (0, _aureliaFramework.inject)(_scoreboard.ScoreBoard), _dec2 = (0, _aureliaFramework.computedFrom)('scoreboard.totalScore'), _dec3 = (0, _aureliaFramework.computedFrom)('scoreboard.notifications'), _dec(_class = (_class2 = function () {
+  var Header = exports.Header = (_dec = (0, _aureliaFramework.inject)(_scoreboard.ScoreBoard), _dec2 = (0, _aureliaFramework.computedFrom)('scoreboard.totalScore'), _dec3 = (0, _aureliaFramework.computedFrom)('scoreboard.notifications'), _dec4 = (0, _aureliaFramework.computedFrom)('scoreboard.achievementNotifications'), _dec(_class = (_class2 = function () {
     function Header(scoreboard) {
       _classCallCheck(this, Header);
 
@@ -364,10 +364,16 @@ define('header',["exports", "aurelia-framework", "./scoreboard"], function (expo
       get: function get() {
         return this.scoreboard.notifications;
       }
+    }, {
+      key: "achievementNotifications",
+      get: function get() {
+        console.log("Getting achievements");
+        return this.scoreboard.achievementNotifications;
+      }
     }]);
 
     return Header;
-  }(), (_applyDecoratedDescriptor(_class2.prototype, "score", [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, "score"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "scoreNotifications", [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, "scoreNotifications"), _class2.prototype)), _class2)) || _class);
+  }(), (_applyDecoratedDescriptor(_class2.prototype, "score", [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, "score"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "scoreNotifications", [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, "scoreNotifications"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "achievementNotifications", [_dec4], Object.getOwnPropertyDescriptor(_class2.prototype, "achievementNotifications"), _class2.prototype)), _class2)) || _class);
 });
 define('home',['exports', 'aurelia-framework', './data-manager', 'aurelia-router'], function (exports, _aureliaFramework, _dataManager, _aureliaRouter) {
   'use strict';
@@ -698,12 +704,12 @@ define('survey-data',["exports"], function (exports) {
       requirements: [{
         name: "number-input",
         type: "greater-than",
-        value: 5
+        value: 0
       }, {
         name: "number-grid",
         type: "grid-column-greater-than",
         column: 0,
-        value: 0
+        value: -1
       }]
     }],
     pages: [{
@@ -1079,6 +1085,15 @@ define('models/survey',["exports", "./page"], function (exports, _page) {
 
     return Survey;
   }();
+});
+define('resources/index',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.configure = configure;
+  function configure(config) {}
 });
 define('question-widgets/checkbox-grid-widget',["exports"], function (exports) {
   "use strict";
@@ -1766,22 +1781,13 @@ define('question-widgets/text-widget',["exports"], function (exports) {
     return TextWidget;
   }();
 });
-define('resources/index',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.configure = configure;
-  function configure(config) {}
-});
 define('text!app.html', ['module'], function(module) { module.exports = "<template><require from=\"app.css\"></require><div class=\"container\"><compose view-model=\"header\"></compose><div class=\"page-host\"><router-view></router-view></div></div></template>"; });
 define('text!app.css', ['module'], function(module) { module.exports = "/*\n@media screen and ( min-width: 320px ){\n    html {\n        font-size: 150%;\n    }\n}\n\n@media screen and ( max-width: 830px ){\n    body {\n        margin: 50px 15px 0 15px;\n    }\n}\n*/\n\nbody {\n    margin: auto;\n    //max-width: 800px;\n    margin-top: 50px;\n}\n\n.body-background {\n    position: fixed;\n    top: calc(50px + 20vh);\n    left: 0px;\n    z-index: -1;\n    width: 100%;\n    text-align: center;\n    vertical-align: middle;\n}\n\n.body-background-symbol {\n    color: #b56f6f;\n    opacity: 0.5;\n    font-size: 50vw;\n    text-shadow: 4px 4px 8px rgba(0,0,0,0.8);\n    transform: rotate(30deg);\n}\n\ntd, th {\n    padding: 5px;\n}\n\nlabel {\n    color: #222;\n}\n\n.left-align {\n    text-align: left;\n}\n\n.right-align {\n    text-align: right;\n}\n\n.inline-half {\n    display: inline-block;\n    width: 50%;\n}\n\n.page-host {\n    //max-width: 800px;\n}\n\n.question {\n    margin: 20px 0px;\n}\n\n.group-with-border {\n    border:  1px solid rgba(181,111,111,0.3);\n    padding: 15px;\n    margin: 10px 0px;\n    box-shadow: 0px 2px 8px rgba(0,0,0, 0.2);\n    background-color: rgba(255,255,255,0.8);\n}\n\n.group-no-border {\n    padding: 0px;\n    margin: 10px 0px;\n}\n\n.radio-button {\n    cursor: pointer;\n    align-items: middle;\n    display: flex;\n    margin: 4px 10px;\n}\n\n.radio-circle {\n    font-size: 160%;\n    color: #009688;\n    margin-right: 10px;\n}\n\n.checkbox-box {\n    font-size: 200%;\n    color: #009688;\n}\n\n.number-widget-minus, .number-widget-plus, .number-widget-input {\n    vertical-align: top;\n    display: inline-block;\n    border:  1px solid #888;\n    height: 100%;\n}\n\n.number-widget-minus, .number-widget-plus {\n    width: 1.5em;\n    text-align: center;\n    background-color: #009688;\n    color: white;\n    cursor: pointer;\n    -webkit-user-select: none;  \n    -moz-user-select: none;    \n    -ms-user-select: none;      \n    user-select: none;\n}\n\n.number-widget-minus {\n    border-radius: 4px 0px 0px 4px;\n    font-weight: bold;\n    margin-left: 8px;\n}\n\n.number-widget-plus {\n    border-radius: 0px 4px 4px 0px;\n    margin-right: 8px;\n}\n\n.number-widget-action {\n    font-size: 90%;\n}\n\n.number-widget-input {\n    min-width: 2.5em;\n    padding: 0px 5px 0px 8px;\n    text-align: right;\n    border-left: none;\n    border-right: none;\n}\n"; });
 define('text!footer.html', ['module'], function(module) { module.exports = "<template><require from=\"footer.css\"></require><nav class=\"footer navbar navbar-default navbar-fixed-bottom\"><div class=\"container\"><ul class=\"nav navbar-nav pull-left\">${message}</ul></div></nav></template>"; });
 define('text!footer.css', ['module'], function(module) { module.exports = ".footer {\n    color: white;\n    min-height: 20px;\n}"; });
 define('text!group-view.html', ['module'], function(module) { module.exports = "<template><div class=\"form-group\"><div if.bind=\"group.border == true\" class=\"group-with-border\">${group.name}<div repeat.for=\"item of group.items\"><compose if.bind=\"item.constructor.name === 'Group'\" model.bind=\"item\" view-model=\"group-view\"></compose><compose if.bind=\"item.constructor.name != 'Group'\" model.bind=\"item\" view-model=\"question-view\"></compose></div></div><div if.bind=\"group.border == false\" class=\"group-no-border\">${group.name}<div repeat.for=\"item of group.items\"><compose if.bind=\"item.constructor.name === 'Group'\" model.bind=\"item\" view-model=\"group-view\"></compose><compose if.bind=\"item.constructor.name != 'Group'\" model.bind=\"item\" view-model=\"question-view\"></compose></div></div></div></template>"; });
-define('text!header.css', ['module'], function(module) { module.exports = ".dheader {\n    position: fixed;\n    top:      0px;\n    z-index:  1;\n    padding:  8px;\n    background-color: white;\n    box-shadow: 0px 2px 5px rgba(0,0,0, 0.3);\n    margin: auto;\n    width: 800px;\n}\n\n.dheader-content {\n    width: 100%;\n}\n\n.header {\n    position: fixed;\n    top: 0;\n    height: 5em;\n    max-width: 800px;\n    width: calc(100% - 15px);\n    z-index: 10;\n}\n\n.header-content {\n    padding: 2px 10px;\n    width: 100%;\n    height: 100%;\n    background-color: #ffdd88;\n    z-index: 10;\n    box-shadow: 0px 2px 8px rgba(0,0,0,0.3);\n}\n\n.header-title {\n    position: absolute;\n    bottom: 15px;\n    font-size: 200%;\n    margin: 4px 0px 0px 10px;\n    \n}\n\n\n@media screen and ( max-width: 830px ){\n    .header {\n        margin-right: 15px;\n    }\n}\n\n.header-score-notification {\n    position:         absolute;\n    top:              -1000px;\n    right:            20vw;\n    padding:          8px;\n    border-radius:    3px;\n    background-color: #fbb;\n    min-width:        2.5em;\n    text-align:       center;\n}\n\n.header-score-notification.au-enter-active { \n  animation: riseAndFade 2.5s; \n  overflow: hidden; \n} \n \n@keyframes riseAndFade { \n    0% {\n        top: 10px;\n        opacity: 1;\n        box-shadow: 0px 0px 4px 2px rgba(255,255,155, 0.8);\n    }\n    10% {\n        box-shadow: 0px 0px 14px 22px rgba(255,255,0, 0.2);\n    }\n    30% {\n        box-shadow: 0px 0px 14px 22px rgba(255,255,0, 0);\n    }\n    100% {\n        top: -10px;\n        opacity: 0;\n        box-shadow: 0px 0px 14px 22px rgba(255,255,0, 0);\n    } \n} \n \n"; });
-define('text!header.html', ['module'], function(module) { module.exports = "<template><require from=\"header.css\"></require><nav class=\"navbar navbar-default navbar-fixed-top\"><div class=\"container\"><ul class=\"nav navbar-nav pull-right\"><li class=\"navbar-brand\">Current Score: ${score}</li></ul><div class=\"header-score-notification au-animate\" repeat.for=\"notification of scoreNotifications\">${notification}</div></div></nav></template>"; });
+define('text!header.css', ['module'], function(module) { module.exports = ".dheader {\n    position: fixed;\n    top:      0px;\n    z-index:  1;\n    padding:  8px;\n    background-color: white;\n    box-shadow: 0px 2px 5px rgba(0,0,0, 0.3);\n    margin: auto;\n    width: 800px;\n}\n\n.dheader-content {\n    width: 100%;\n}\n\n.header {\n    position: fixed;\n    top: 0;\n    height: 5em;\n    max-width: 800px;\n    width: calc(100% - 15px);\n    z-index: 10;\n}\n\n.header-content {\n    padding: 2px 10px;\n    width: 100%;\n    height: 100%;\n    background-color: #ffdd88;\n    z-index: 10;\n    box-shadow: 0px 2px 8px rgba(0,0,0,0.3);\n}\n\n.header-title {\n    position: absolute;\n    bottom: 15px;\n    font-size: 200%;\n    margin: 4px 0px 0px 10px;\n    \n}\n\n\n@media screen and ( max-width: 830px ){\n    .header {\n        margin-right: 15px;\n    }\n}\n\n.header-score-notification {\n    position:         absolute;\n    top:              -1000px;\n    right:            20vw;\n    padding:          8px;\n    border-radius:    3px;\n    background-color: #fbb;\n    min-width:        2.5em;\n    text-align:       center;\n}\n\n.header-score-notification.au-enter-active { \n  animation: riseAndFade 2.5s; \n  overflow: hidden; \n} \n \n@keyframes riseAndFade { \n    0% {\n        top: 10px;\n        opacity: 1;\n        box-shadow: 0px 0px 4px 2px rgba(255,155,155, 0.8);\n    }\n    20% {\n        box-shadow: 0px 0px 10px 16px rgba(255,155,155, 0.2);\n    }\n    40% {\n        box-shadow: 0px 0px 12px 18px rgba(255,155,155, 0);\n    }\n    100% {\n        top: -10px;\n        opacity: 0;\n        box-shadow: 0px 0px 14px 22px rgba(255,255,255, 0);\n    } \n} \n \n"; });
+define('text!header.html', ['module'], function(module) { module.exports = "<template><require from=\"header.css\"></require><nav class=\"navbar navbar-default navbar-fixed-top\"><div class=\"container\"><ul class=\"nav navbar-nav pull-right\"><li class=\"navbar-brand\">Current Score: ${score}</li></ul><div class=\"header-score-notification au-animate\" repeat.for=\"notification of scoreNotifications\">${notification}</div><div class=\"header-score-notification au-animate\" repeat.for=\"notification of achievementNotifications\">${notification}</div></div></nav></template>"; });
 define('text!home.html', ['module'], function(module) { module.exports = "<template><compose view-model=\"page-view\" model.bind=\"survey.pages[pageIdx]\"></compose><div class=\"text-center group-with-border\"><h2><a if.bind=\"survey.pages[pageIdx+1]\" href=\"${router.generate('home', {pageNum: pageIdx+2})}\">Next: ${survey.pages[pageIdx+1].name}</a></h2></div><div class=\"inline-half left-align\"><a if.bind=\"pageIdx > 0\" href=\"${router.generate('home', {pageNum: pageIdx})}\">&lt; ${survey.pages[pageIdx-1].name}</a></div></template>"; });
 define('text!page-view.html', ['module'], function(module) { module.exports = "<template><div if.bind=\"page.backSymbol\" class=\"body-background\"><i class=\"fa fa-${page.backSymbol} body-background-symbol\"></i></div><h1>${page.name}</h1><compose view-model=\"group-view\" model.bind=\"page.group\"></compose></template>"; });
 define('text!page.html', ['module'], function(module) { module.exports = "<template><div if.bind=\"backSymbol\" class=\"body-background\"><i class=\"fa fa-${backSymbol} body-background-symbol\"></i></div><h1>${page.name}</h1><compose view-model=\"group-view\" model.bind=\"page.group\"></compose></template>"; });
