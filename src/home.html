@@ -8,10 +8,11 @@
     </a>
     </h2>
   </div>
-  <div class="inline-half left-align">
+  <div class="inline-half left-align link">
     <a if.bind="pageIdx > 0"
        href="${router.generate('home', {pageNum: pageIdx})}">
-      &lt; ${survey.pages[pageIdx-1].name}
+      <i class="fa fa-caret-left"></i>
+      ${survey.pages[pageIdx-1].name}
     </a>
   </div>
 </template>

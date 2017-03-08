@@ -121,7 +121,7 @@ export class ScoreBoard {
     this.notifications.push(notification);
     setTimeout(() => { 
       this.notifications.splice(0, 1);
-    }, 102500);
+    }, 2500);
     console.log(this.notifications);
   }
   
