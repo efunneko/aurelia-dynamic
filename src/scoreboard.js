@@ -9,6 +9,7 @@ export class ScoreBoard {
   notifications = [];
   achievementNotifications = [];
   totalScore = 0;
+  numAchievements = 0;
 
   constructor(dataManager) {
     this.dataManager = dataManager;
@@ -72,11 +73,13 @@ export class ScoreBoard {
           console.log("Got achievement: ", achievement.name);
           scoreDelta = achievement.score;
           this.addAchievementChangeNotification(achievement);
+          this.numAchievements++;
         }
         else if (this.achievements[achievement.name] && !allReqsMet) {
           // Existing achievement lost
           console.log("Lost achievement: ", achievement.name);
           scoreDelta = -achievement.score;
+          this.numAchievements--;
         }
         this.achievements[achievement.name] = allReqsMet;
 
@@ -118,7 +121,7 @@ export class ScoreBoard {
     this.notifications.push(notification);
     setTimeout(() => { 
       this.notifications.splice(0, 1);
-    }, 2500);
+    }, 102500);
     console.log(this.notifications);
   }
   

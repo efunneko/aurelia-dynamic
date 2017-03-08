@@ -1,15 +1,20 @@
 <template>
   <require from="header.css"></require>
-  <nav class="navbar navbar-default navbar-fixed-top">
+  <nav class="navbar-fixed-top">
+  <nav class="navbar navbar-default">
     <div class="container">
       <ul class="nav navbar-nav pull-right">
         <li class="navbar-brand">
           Current Score: ${score}
         </li>
       </ul>
-      <div class="header-score-notification au-animate" repeat.for="notification of scoreNotifications">${notification}</div>
       <div class="header-score-notification au-animate" repeat.for="notification of achievementNotifications">${notification}</div>
+      <compose view-model="header/achievements"></compose>
     </div>
   </nav>
+      <div class="header-score-notification-container">
+        <div class="header-score-notification au-animate" repeat.for="notification of scoreNotifications">${notification}</div>
+      </div>
+      </nav>
 </template>
   

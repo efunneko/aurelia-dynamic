@@ -46,10 +46,11 @@
     }
 }
 
+.header-score-notification-container {
+    float: right;
+}
+
 .header-score-notification {
-    position:         absolute;
-    top:              -1000px;
-    right:            20vw;
     padding:          8px;
     border-radius:    3px;
     background-color: #fbb;
@@ -57,8 +58,15 @@
     text-align:       center;
 }
 
+.skip {
+   position:         absolute;
+    top:              -1000px;
+    right:            20vw;
+ 
+}
+
 .header-score-notification.au-enter-active { 
-  animation: riseAndFade 2.5s; 
+  animation: riseAndFade 102.5s; 
   overflow: hidden; 
 } 
  

@@ -14,10 +14,36 @@ export default {
           value: 0
         },
         {
-          name: "number-grid",
+          name: "condiments",
           type: "grid-column-greater-than",
           column: 0,
-          value: -1
+          value: 0
+        }
+      ]
+    },
+    {
+      name: "Test 2",
+      score: 15,
+      level: "common",
+      requirements: [
+        {
+          name: "number-grid",
+          type: "grid-column-greater-than",
+          column: 1,
+          value: 0
+        }
+      ]
+    },
+    {
+      name: "Test 3",
+      score: 25,
+      level: "common",
+      requirements: [
+        {
+          name: "condiments",
+          type: "grid-column-greater-than",
+          column: 1,
+          value: 0
         }
       ]
     }
