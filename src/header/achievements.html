@@ -1,0 +1,9 @@
+<template>
+  Achievements!
+  <div class="" repeat.for="achievement of achievements">
+    ${achievement.name} 
+    ${achievementState[achievement.name] ? "met" : "failed"}
+  </div>
+
+
+</template>
