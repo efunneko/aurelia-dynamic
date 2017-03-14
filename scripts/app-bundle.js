@@ -283,7 +283,7 @@ define('group-view',["exports"], function (exports) {
 
   ;
 });
-define('header',["exports", "aurelia-framework", "./scoreboard"], function (exports, _aureliaFramework, _scoreboard) {
+define('header',["exports", "aurelia-framework", "./models/scoreboard"], function (exports, _aureliaFramework, _scoreboard) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -523,7 +523,577 @@ define('question-view',["exports"], function (exports) {
 
   ;
 });
-define('scoreboard',['exports', './models/answer', 'aurelia-framework', './data-manager'], function (exports, _answer, _aureliaFramework, _dataManager) {
+define('survey-data',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = {
+    name: "This is a test survey",
+    description: "Ask about this and that",
+    achievements: [{
+      name: "Test 1a",
+      score: 5,
+      rarity: "common",
+      requirements: [{
+        name: "number-input",
+        type: "greater-than",
+        value: 0
+      }, {
+        name: "condiments",
+        type: "grid-column-greater-than",
+        column: 0,
+        value: 0
+      }]
+    }, {
+      name: "Test 1b",
+      score: 5,
+      rarity: "common",
+      requirements: [{
+        name: "number-input",
+        type: "greater-than",
+        value: 0
+      }, {
+        name: "condiments",
+        type: "grid-column-greater-than",
+        column: 0,
+        value: 0
+      }]
+    }, {
+      name: "Test 1c",
+      score: 5,
+      rarity: "common",
+      requirements: [{
+        name: "number-input",
+        type: "greater-than",
+        value: 0
+      }, {
+        name: "condiments",
+        type: "grid-column-greater-than",
+        column: 0,
+        value: 0
+      }]
+    }, {
+      name: "Test 2a",
+      score: 15,
+      rarity: "rare",
+      requirements: [{
+        name: "number-grid",
+        type: "grid-column-greater-than",
+        column: 1,
+        value: 0
+      }]
+    }, {
+      name: "Test 2b",
+      score: 15,
+      rarity: "rare",
+      requirements: [{
+        name: "number-grid",
+        type: "grid-column-greater-than",
+        column: 1,
+        value: 0
+      }]
+    }, {
+      name: "Test 3",
+      score: 25,
+      rarity: "epic",
+      requirements: [{
+        name: "condiments",
+        type: "grid-column-greater-than",
+        column: 1,
+        value: 0
+      }]
+    }, {
+      name: "Legendary",
+      score: 25,
+      rarity: "legendary",
+      requirements: [{
+        name: "condiments",
+        type: "grid-column-greater-than",
+        column: 2,
+        value: 0
+      }]
+    }],
+    pages: [{
+      name: "Page 1",
+      backSymbol: "eye",
+      description: "Ask about address",
+      group: {
+        name: "Home address",
+        border: true,
+        items: [{
+          type: "text",
+          name: "text input"
+        }, {
+          type: "number",
+          scoreType: "scale",
+          scoreData: [{ upTo: 10, scale: 1 }, { upTo: 20, scale: 0.5 }, { upTo: 40, scale: 0.25 }, { upTo: 100, scale: 0.125 }],
+          name: "number-input"
+        }, {
+          type: "number-grid",
+          scoreType: "scale",
+          scoreData: [{ upTo: 10, scale: 1 }, { upTo: 20, scale: 0.5 }, { upTo: 40, scale: 0.25 }, { upTo: 100, scale: 0.125 }],
+          columns: [{ name: "Inside", scale: 1 }, { name: "Outside", scale: 1 }],
+          rows: [{ name: "Balls", scale: 1 }, { name: "Chairs", scale: 2 }, { name: "Desks", scale: 3 }, { name: "Stools", scale: 4 }],
+          name: "number-grid"
+        }, {
+          type: "select",
+          options: [{ name: "--choose-one--", scoreData: 0 }, { name: "one", scoreData: 1 }, { name: "two", scoreData: 2 }, { name: "three", scoreData: 3 }, { name: "three-3", scoreData: 4 }],
+          name: "select-on-page-1"
+        }, {
+          type: "radio",
+          options: [{ name: "one-r", scoreData: 0 }, { name: "two-r", scoreData: 2 }, { name: "three-r", scoreData: 4 }],
+          name: "radio-on-page-1"
+        }, {
+          type: "checkbox-grid",
+          columns: [{ name: "With Ketchup", scoreData: 1 }, { name: "With Mustard", scoreData: 2 }, { name: "With Relish", scoreData: 3 }],
+          rows: [{ name: "Hamburger", scoreData: 1 }, { name: "Hotdog", scoreData: 2 }, { name: "Fries", scoreData: 3 }, { name: "Ice Cream", scoreData: 4 }, { name: "A big plate of well cooked sausages", scoreData: 5 }],
+          name: "condiments"
+        }, {
+          type: "text",
+          name: "another text input"
+        }]
+      }
+    }, {
+      name: "Page 2",
+      backSymbol: "venus-mars",
+      description: "Other details",
+      group: {
+        name: "Home address",
+        border: false,
+        items: [{
+          type: "group",
+          border: true,
+          name: "Test group",
+          items: [{
+            type: "select",
+            options: [{ name: "cat", scoreData: 1 }, { name: "dog", scoreData: 2 }, { name: "horse", scoreData: 3 }],
+            name: "animal"
+          }, {
+            type: "radio",
+            options: [{ name: "pizza", scoreData: 1 }, { name: "hotdog", scoreData: 2 }, { name: "poutine", scoreData: 3 }],
+            name: "food"
+          }]
+        }, {
+          type: "group",
+          border: true,
+          name: "Test group 2",
+          items: [{
+            type: "text",
+            name: "text input"
+          }, {
+            type: "select",
+            options: [{ name: "one", scoreData: 1 }, { name: "two", scoreData: 2 }, { name: "three", scoreData: 3 }],
+            name: "select-on-page-2"
+          }, {
+            type: "radio",
+            options: [{ name: "one-r", scoreData: 1 }, { name: "two-r", scoreData: 1 }, { name: "three-r", scoreData: 1 }],
+            name: "radio-on-page-2"
+          }, {
+            type: "text",
+            name: "another text input"
+          }]
+        }]
+      }
+    }, {
+      name: "Lots of radios",
+      backSymbol: "heart-o",
+      description: "Other details",
+      group: {
+        name: "Some information",
+        border: true,
+        items: [{
+          type: "text",
+          name: "another text input"
+        }]
+      }
+    }]
+
+  };
+});
+define('header/achievements-view',['exports', 'aurelia-framework', '../models/scoreboard'], function (exports, _aureliaFramework, _scoreboard) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Achievements = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var _createClass = function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  }();
+
+  function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+    var desc = {};
+    Object['ke' + 'ys'](descriptor).forEach(function (key) {
+      desc[key] = descriptor[key];
+    });
+    desc.enumerable = !!desc.enumerable;
+    desc.configurable = !!desc.configurable;
+
+    if ('value' in desc || desc.initializer) {
+      desc.writable = true;
+    }
+
+    desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+      return decorator(target, property, desc) || desc;
+    }, desc);
+
+    if (context && desc.initializer !== void 0) {
+      desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+      desc.initializer = undefined;
+    }
+
+    if (desc.initializer === void 0) {
+      Object['define' + 'Property'](target, property, desc);
+      desc = null;
+    }
+
+    return desc;
+  }
+
+  var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _class, _desc, _value, _class2;
+
+  var Achievements = exports.Achievements = (_dec = (0, _aureliaFramework.inject)(_scoreboard.ScoreBoard), _dec2 = (0, _aureliaFramework.computedFrom)('scoreboard.achievements'), _dec3 = (0, _aureliaFramework.computedFrom)('scoreboard.achievements'), _dec4 = (0, _aureliaFramework.computedFrom)('scoreboard.achievements'), _dec5 = (0, _aureliaFramework.computedFrom)('scoreboard.numAchievements'), _dec6 = (0, _aureliaFramework.computedFrom)('scoreboard.achievementNotifications'), _dec(_class = (_class2 = function () {
+    function Achievements(scoreboard) {
+      _classCallCheck(this, Achievements);
+
+      this.rarityLevels = ['common', 'rare', 'epic', 'legendary'];
+
+      this.scoreboard = scoreboard;
+    }
+
+    _createClass(Achievements, [{
+      key: 'achievements',
+      get: function get() {
+        console.log("Achievements:", this.scoreboard.achievements, this.scoreboard.survey.achievements);
+        if (!this.scoreboard.survey) {
+          return [];
+        }
+        return this.scoreboard.survey.achievements;
+      }
+    }, {
+      key: 'achievementByRarity',
+      get: function get() {
+        if (!this.scoreboard.survey) {
+          return [];
+        }
+        console.log("Achievements by rarity:", this.scoreboard.survey.achievementByRarity);
+        return this.scoreboard.survey.achievementByRarity;
+      }
+    }, {
+      key: 'achievementState',
+      get: function get() {
+        return this.scoreboard.achievements;
+      }
+    }, {
+      key: 'numAchievements',
+      get: function get() {
+        return this.scoreboard.notifications;
+      }
+    }, {
+      key: 'achievementNotifications',
+      get: function get() {
+        console.log("Getting achievements");
+        return this.scoreboard.achievementNotifications;
+      }
+    }]);
+
+    return Achievements;
+  }(), (_applyDecoratedDescriptor(_class2.prototype, 'achievements', [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, 'achievements'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'achievementByRarity', [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, 'achievementByRarity'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'achievementState', [_dec4], Object.getOwnPropertyDescriptor(_class2.prototype, 'achievementState'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'numAchievements', [_dec5], Object.getOwnPropertyDescriptor(_class2.prototype, 'numAchievements'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'achievementNotifications', [_dec6], Object.getOwnPropertyDescriptor(_class2.prototype, 'achievementNotifications'), _class2.prototype)), _class2)) || _class);
+});
+define('header/score',['exports', 'aurelia-framework', '../models/scoreboard'], function (exports, _aureliaFramework, _scoreboard) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.SelectWidget = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var _createClass = function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  }();
+
+  var _dec, _class;
+
+  var SelectWidget = exports.SelectWidget = (_dec = (0, _aureliaFramework.inject)(_scoreboard.ScoreBoard), _dec(_class = function () {
+    function SelectWidget(scoreboard) {
+      _classCallCheck(this, SelectWidget);
+
+      this.score = 0;
+
+      this.scoreboard = scoreboard;
+    }
+
+    SelectWidget.prototype.activate = function activate(obj) {};
+
+    _createClass(SelectWidget, [{
+      key: 'score',
+      set: function set(val) {
+        this.score = val;
+      }
+    }]);
+
+    return SelectWidget;
+  }()) || _class);
+});
+define('models/achievement',['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Achievement = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Achievement = exports.Achievement = function () {
+    function Achievement() {
+      _classCallCheck(this, Achievement);
+    }
+
+    Achievement.fromObject = function fromObject(src) {
+      var obj = Object.assign(new Achievement(), src);
+      return obj;
+    };
+
+    return Achievement;
+  }();
+});
+define('models/answer',["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Answer = exports.Answer = function () {
+    function Answer() {
+      _classCallCheck(this, Answer);
+
+      this.name = "";
+      this.value = null;
+      this.score = null;
+    }
+
+    Answer.fromObject = function fromObject(src) {
+      var obj = Object.assign(new Answer(), src);
+      obj.computeScore();
+      return obj;
+    };
+
+    Answer.prototype.computeScore = function computeScore() {
+      if (!this.scoreType) {
+        this.score = this.value ? this.scoreData : 0;
+      } else if (this.scoreType == "scale") {
+        var lastUpTo = 0;
+        var score = 0;
+        for (var _iterator = this.scoreData, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+          var _ref;
+
+          if (_isArray) {
+            if (_i >= _iterator.length) break;
+            _ref = _iterator[_i++];
+          } else {
+            _i = _iterator.next();
+            if (_i.done) break;
+            _ref = _i.value;
+          }
+
+          var entry = _ref;
+
+          var numToAdd = void 0;
+          if (this.value > entry.upTo) {
+            score += (entry.upTo - lastUpTo) * entry.scale;
+          } else {
+            score += (this.value - lastUpTo) * entry.scale;
+            break;
+          }
+          lastUpTo = entry.upTo;
+          console.log(entry, score);
+        }
+        this.score = score;
+      }
+    };
+
+    return Answer;
+  }();
+});
+define('models/group',["exports", "./question"], function (exports, _question) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Group = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Group = exports.Group = function () {
+    function Group() {
+      _classCallCheck(this, Group);
+
+      this.name = "";
+      this.border = false;
+      this.items = [];
+    }
+
+    Group.fromObject = function fromObject(src) {
+      var group = Object.assign(new Group(), src);
+      var tmpItems = group.items;
+      console.log(tmpItems);
+      group.items = [];
+      console.log("temp items:", tmpItems);
+      for (var _iterator = tmpItems, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+        var _ref;
+
+        if (_isArray) {
+          if (_i >= _iterator.length) break;
+          _ref = _iterator[_i++];
+        } else {
+          _i = _iterator.next();
+          if (_i.done) break;
+          _ref = _i.value;
+        }
+
+        var item = _ref;
+
+        if (item.type === "group") {
+          group.items.push(Group.fromObject(item));
+        } else {
+          console.log("Adding quest", item);
+          group.items.push(_question.Question.fromObject(item));
+        }
+      }
+      return group;
+    };
+
+    return Group;
+  }();
+});
+define('models/page',["exports", "./group"], function (exports, _group) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Page = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Page = exports.Page = function () {
+    function Page() {
+      _classCallCheck(this, Page);
+
+      this.name = "";
+      this.description = "";
+      this.group = {};
+    }
+
+    Page.fromObject = function fromObject(src) {
+      var page = Object.assign(new Page(), src);
+      page.group = _group.Group.fromObject(page.group);
+      return page;
+    };
+
+    return Page;
+  }();
+});
+define('models/question',['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Question = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var Question = exports.Question = function () {
+    function Question() {
+      _classCallCheck(this, Question);
+    }
+
+    Question.fromObject = function fromObject(src) {
+      var obj = Object.assign(new Question(), src);
+      obj.learnAnswer();
+      return obj;
+    };
+
+    Question.prototype.learnAnswer = function learnAnswer() {};
+
+    Question.prototype.answerQuestion = function answerQuestion(answer) {
+      this.answer = Answer.fromObject(answer);
+      this.scoreboard(this.answer);
+    };
+
+    return Question;
+  }();
+});
+define('models/scoreboard',['exports', './answer', 'aurelia-framework', '../data-manager'], function (exports, _answer, _aureliaFramework, _dataManager) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -691,492 +1261,6 @@ define('scoreboard',['exports', './models/answer', 'aurelia-framework', './data-
     return ScoreBoard;
   }()) || _class);
 });
-define('survey-data',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.default = {
-    name: "This is a test survey",
-    description: "Ask about this and that",
-    achievements: [{
-      name: "Test 1",
-      score: 5,
-      level: "common",
-      requirements: [{
-        name: "number-input",
-        type: "greater-than",
-        value: 0
-      }, {
-        name: "condiments",
-        type: "grid-column-greater-than",
-        column: 0,
-        value: 0
-      }]
-    }, {
-      name: "Test 2",
-      score: 15,
-      level: "common",
-      requirements: [{
-        name: "number-grid",
-        type: "grid-column-greater-than",
-        column: 1,
-        value: 0
-      }]
-    }, {
-      name: "Test 3",
-      score: 25,
-      level: "common",
-      requirements: [{
-        name: "condiments",
-        type: "grid-column-greater-than",
-        column: 1,
-        value: 0
-      }]
-    }],
-    pages: [{
-      name: "Page 1",
-      backSymbol: "eye",
-      description: "Ask about address",
-      group: {
-        name: "Home address",
-        border: true,
-        items: [{
-          type: "text",
-          name: "text input"
-        }, {
-          type: "number",
-          scoreType: "scale",
-          scoreData: [{ upTo: 10, scale: 1 }, { upTo: 20, scale: 0.5 }, { upTo: 40, scale: 0.25 }, { upTo: 100, scale: 0.125 }],
-          name: "number-input"
-        }, {
-          type: "number-grid",
-          scoreType: "scale",
-          scoreData: [{ upTo: 10, scale: 1 }, { upTo: 20, scale: 0.5 }, { upTo: 40, scale: 0.25 }, { upTo: 100, scale: 0.125 }],
-          columns: [{ name: "Inside", scale: 1 }, { name: "Outside", scale: 1 }],
-          rows: [{ name: "Balls", scale: 1 }, { name: "Chairs", scale: 2 }, { name: "Desks", scale: 3 }, { name: "Stools", scale: 4 }],
-          name: "number-grid"
-        }, {
-          type: "select",
-          options: [{ name: "--choose-one--", scoreData: 0 }, { name: "one", scoreData: 1 }, { name: "two", scoreData: 2 }, { name: "three", scoreData: 3 }, { name: "three-3", scoreData: 4 }],
-          name: "select-on-page-1"
-        }, {
-          type: "radio",
-          options: [{ name: "one-r", scoreData: 0 }, { name: "two-r", scoreData: 2 }, { name: "three-r", scoreData: 4 }],
-          name: "radio-on-page-1"
-        }, {
-          type: "checkbox-grid",
-          columns: [{ name: "With Ketchup", scoreData: 1 }, { name: "With Mustard", scoreData: 2 }, { name: "With Relish", scoreData: 3 }],
-          rows: [{ name: "Hamburger", scoreData: 1 }, { name: "Hotdog", scoreData: 2 }, { name: "Fries", scoreData: 3 }, { name: "Ice Cream", scoreData: 4 }, { name: "A big plate of well cooked sausages", scoreData: 5 }],
-          name: "condiments"
-        }, {
-          type: "text",
-          name: "another text input"
-        }]
-      }
-    }, {
-      name: "Page 2",
-      backSymbol: "venus-mars",
-      description: "Other details",
-      group: {
-        name: "Home address",
-        border: false,
-        items: [{
-          type: "group",
-          border: true,
-          name: "Test group",
-          items: [{
-            type: "select",
-            options: [{ name: "cat", scoreData: 1 }, { name: "dog", scoreData: 2 }, { name: "horse", scoreData: 3 }],
-            name: "animal"
-          }, {
-            type: "radio",
-            options: [{ name: "pizza", scoreData: 1 }, { name: "hotdog", scoreData: 2 }, { name: "poutine", scoreData: 3 }],
-            name: "food"
-          }]
-        }, {
-          type: "group",
-          border: true,
-          name: "Test group 2",
-          items: [{
-            type: "text",
-            name: "text input"
-          }, {
-            type: "select",
-            options: [{ name: "one", scoreData: 1 }, { name: "two", scoreData: 2 }, { name: "three", scoreData: 3 }],
-            name: "select-on-page-2"
-          }, {
-            type: "radio",
-            options: [{ name: "one-r", scoreData: 1 }, { name: "two-r", scoreData: 1 }, { name: "three-r", scoreData: 1 }],
-            name: "radio-on-page-2"
-          }, {
-            type: "text",
-            name: "another text input"
-          }]
-        }]
-      }
-    }, {
-      name: "Lots of radios",
-      backSymbol: "heart-o",
-      description: "Other details",
-      group: {
-        name: "Some information",
-        border: true,
-        items: [{
-          type: "text",
-          name: "another text input"
-        }]
-      }
-    }]
-
-  };
-});
-define('header/achievements',['exports', 'aurelia-framework', '../scoreboard'], function (exports, _aureliaFramework, _scoreboard) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.Achievements = undefined;
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var _createClass = function () {
-    function defineProperties(target, props) {
-      for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ("value" in descriptor) descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-      }
-    }
-
-    return function (Constructor, protoProps, staticProps) {
-      if (protoProps) defineProperties(Constructor.prototype, protoProps);
-      if (staticProps) defineProperties(Constructor, staticProps);
-      return Constructor;
-    };
-  }();
-
-  function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-    var desc = {};
-    Object['ke' + 'ys'](descriptor).forEach(function (key) {
-      desc[key] = descriptor[key];
-    });
-    desc.enumerable = !!desc.enumerable;
-    desc.configurable = !!desc.configurable;
-
-    if ('value' in desc || desc.initializer) {
-      desc.writable = true;
-    }
-
-    desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-      return decorator(target, property, desc) || desc;
-    }, desc);
-
-    if (context && desc.initializer !== void 0) {
-      desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-      desc.initializer = undefined;
-    }
-
-    if (desc.initializer === void 0) {
-      Object['define' + 'Property'](target, property, desc);
-      desc = null;
-    }
-
-    return desc;
-  }
-
-  var _dec, _dec2, _dec3, _dec4, _dec5, _class, _desc, _value, _class2;
-
-  var Achievements = exports.Achievements = (_dec = (0, _aureliaFramework.inject)(_scoreboard.ScoreBoard), _dec2 = (0, _aureliaFramework.computedFrom)('scoreboard.achievements'), _dec3 = (0, _aureliaFramework.computedFrom)('scoreboard.achievements'), _dec4 = (0, _aureliaFramework.computedFrom)('scoreboard.numAchievements'), _dec5 = (0, _aureliaFramework.computedFrom)('scoreboard.achievementNotifications'), _dec(_class = (_class2 = function () {
-    function Achievements(scoreboard) {
-      _classCallCheck(this, Achievements);
-
-      this.scoreboard = scoreboard;
-    }
-
-    _createClass(Achievements, [{
-      key: 'achievements',
-      get: function get() {
-        console.log("Achievements:", this.scoreboard.achievements, this.scoreboard.survey.achievements);
-        if (!this.scoreboard.survey) {
-          return [];
-        }
-        return this.scoreboard.survey.achievements;
-      }
-    }, {
-      key: 'achievementState',
-      get: function get() {
-        return this.scoreboard.achievements;
-      }
-    }, {
-      key: 'numAchievements',
-      get: function get() {
-        return this.scoreboard.notifications;
-      }
-    }, {
-      key: 'achievementNotifications',
-      get: function get() {
-        console.log("Getting achievements");
-        return this.scoreboard.achievementNotifications;
-      }
-    }]);
-
-    return Achievements;
-  }(), (_applyDecoratedDescriptor(_class2.prototype, 'achievements', [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, 'achievements'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'achievementState', [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, 'achievementState'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'numAchievements', [_dec4], Object.getOwnPropertyDescriptor(_class2.prototype, 'numAchievements'), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, 'achievementNotifications', [_dec5], Object.getOwnPropertyDescriptor(_class2.prototype, 'achievementNotifications'), _class2.prototype)), _class2)) || _class);
-});
-define('header/score',['exports', 'aurelia-framework', '../scoreboard'], function (exports, _aureliaFramework, _scoreboard) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.SelectWidget = undefined;
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var _createClass = function () {
-    function defineProperties(target, props) {
-      for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ("value" in descriptor) descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-      }
-    }
-
-    return function (Constructor, protoProps, staticProps) {
-      if (protoProps) defineProperties(Constructor.prototype, protoProps);
-      if (staticProps) defineProperties(Constructor, staticProps);
-      return Constructor;
-    };
-  }();
-
-  var _dec, _class;
-
-  var SelectWidget = exports.SelectWidget = (_dec = (0, _aureliaFramework.inject)(_scoreboard.ScoreBoard), _dec(_class = function () {
-    function SelectWidget(scoreboard) {
-      _classCallCheck(this, SelectWidget);
-
-      this.score = 0;
-
-      this.scoreboard = scoreboard;
-    }
-
-    SelectWidget.prototype.activate = function activate(obj) {};
-
-    _createClass(SelectWidget, [{
-      key: 'score',
-      set: function set(val) {
-        this.score = val;
-      }
-    }]);
-
-    return SelectWidget;
-  }()) || _class);
-});
-define('models/answer',["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var Answer = exports.Answer = function () {
-    function Answer() {
-      _classCallCheck(this, Answer);
-
-      this.name = "";
-      this.value = null;
-      this.score = null;
-    }
-
-    Answer.fromObject = function fromObject(src) {
-      var obj = Object.assign(new Answer(), src);
-      obj.computeScore();
-      return obj;
-    };
-
-    Answer.prototype.computeScore = function computeScore() {
-      if (!this.scoreType) {
-        this.score = this.value ? this.scoreData : 0;
-      } else if (this.scoreType == "scale") {
-        var lastUpTo = 0;
-        var score = 0;
-        for (var _iterator = this.scoreData, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
-          var _ref;
-
-          if (_isArray) {
-            if (_i >= _iterator.length) break;
-            _ref = _iterator[_i++];
-          } else {
-            _i = _iterator.next();
-            if (_i.done) break;
-            _ref = _i.value;
-          }
-
-          var entry = _ref;
-
-          var numToAdd = void 0;
-          if (this.value > entry.upTo) {
-            score += (entry.upTo - lastUpTo) * entry.scale;
-          } else {
-            score += (this.value - lastUpTo) * entry.scale;
-            break;
-          }
-          lastUpTo = entry.upTo;
-          console.log(entry, score);
-        }
-        this.score = score;
-      }
-    };
-
-    return Answer;
-  }();
-});
-define('models/group',["exports", "./question"], function (exports, _question) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.Group = undefined;
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var Group = exports.Group = function () {
-    function Group() {
-      _classCallCheck(this, Group);
-
-      this.name = "";
-      this.border = false;
-      this.items = [];
-    }
-
-    Group.fromObject = function fromObject(src) {
-      var group = Object.assign(new Group(), src);
-      var tmpItems = group.items;
-      console.log(tmpItems);
-      group.items = [];
-      console.log(tmpItems);
-      for (var _iterator = tmpItems, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
-        var _ref;
-
-        if (_isArray) {
-          if (_i >= _iterator.length) break;
-          _ref = _iterator[_i++];
-        } else {
-          _i = _iterator.next();
-          if (_i.done) break;
-          _ref = _i.value;
-        }
-
-        var item = _ref;
-
-        if (item.type === "group") {
-          group.items.push(Group.fromObject(item));
-        } else {
-          console.log("Adding quest", item);
-          group.items.push(_question.Question.fromObject(item));
-        }
-      }
-      return group;
-    };
-
-    return Group;
-  }();
-});
-define('models/page',["exports", "./group"], function (exports, _group) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.Page = undefined;
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var Page = exports.Page = function () {
-    function Page() {
-      _classCallCheck(this, Page);
-
-      this.name = "";
-      this.description = "";
-      this.group = {};
-    }
-
-    Page.fromObject = function fromObject(src) {
-      var page = Object.assign(new Page(), src);
-      page.group = _group.Group.fromObject(page.group);
-      return page;
-    };
-
-    return Page;
-  }();
-});
-define('models/question',['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.Question = undefined;
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  var Question = exports.Question = function () {
-    function Question(scoreboard) {
-      _classCallCheck(this, Question);
-
-      this.scoreboard = scoreboard;
-    }
-
-    Question.fromObject = function fromObject(src) {
-      var obj = Object.assign(new Question(), src);
-      obj.learnAnswer();
-      return obj;
-    };
-
-    Question.prototype.learnAnswer = function learnAnswer() {};
-
-    Question.prototype.answerQuestion = function answerQuestion(answer) {
-      this.answer = Answer.fromObject(answer);
-      this.scoreboard(this.answer);
-    };
-
-    return Question;
-  }();
-});
 define('models/survey',["exports", "./page"], function (exports, _page) {
   "use strict";
 
@@ -1198,12 +1282,157 @@ define('models/survey',["exports", "./page"], function (exports, _page) {
       this.name = "";
       this.description = "";
       this.pages = [];
+      this.questionIndex = [];
+      this.achievementIndex = [];
+      this.achievementByRarity = {};
     }
 
     Survey.fromObject = function fromObject(src) {
       var survey = Object.assign(new Survey(), src);
       survey.pages = survey.pages.map(_page.Page.fromObject);
+
+      survey.organizeQuestions();
+      survey.organizeAchievements();
+
       return survey;
+    };
+
+    Survey.prototype.processGroup = function processGroup(group) {
+
+      for (var _iterator = group.items, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+        var _ref;
+
+        if (_isArray) {
+          if (_i >= _iterator.length) break;
+          _ref = _iterator[_i++];
+        } else {
+          _i = _iterator.next();
+          if (_i.done) break;
+          _ref = _i.value;
+        }
+
+        var item = _ref;
+
+        if (item.type === "group") {
+          this.processGroup(item);
+        } else {
+          this.questionIndex[item.name] = item;
+        }
+      }
+    };
+
+    Survey.prototype.organizeQuestions = function organizeQuestions() {
+      for (var _iterator2 = this.pages, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
+        var _ref2;
+
+        if (_isArray2) {
+          if (_i2 >= _iterator2.length) break;
+          _ref2 = _iterator2[_i2++];
+        } else {
+          _i2 = _iterator2.next();
+          if (_i2.done) break;
+          _ref2 = _i2.value;
+        }
+
+        var page = _ref2;
+
+        this.processGroup(page.group);
+      }
+    };
+
+    Survey.prototype.organizeAchievements = function organizeAchievements() {
+      if (this.achievements) {
+        for (var _iterator3 = this.achievements, _isArray3 = Array.isArray(_iterator3), _i3 = 0, _iterator3 = _isArray3 ? _iterator3 : _iterator3[Symbol.iterator]();;) {
+          var _ref3;
+
+          if (_isArray3) {
+            if (_i3 >= _iterator3.length) break;
+            _ref3 = _iterator3[_i3++];
+          } else {
+            _i3 = _iterator3.next();
+            if (_i3.done) break;
+            _ref3 = _i3.value;
+          }
+
+          var achievement = _ref3;
+
+          var tempReq = achievement.requirements;
+          achievement.requirements = [];
+          for (var _iterator4 = tempReq, _isArray4 = Array.isArray(_iterator4), _i4 = 0, _iterator4 = _isArray4 ? _iterator4 : _iterator4[Symbol.iterator]();;) {
+            var _ref4;
+
+            if (_isArray4) {
+              if (_i4 >= _iterator4.length) break;
+              _ref4 = _iterator4[_i4++];
+            } else {
+              _i4 = _iterator4.next();
+              if (_i4.done) break;
+              _ref4 = _i4.value;
+            }
+
+            var req = _ref4;
+
+            if (!this.achievementIndex[req.name]) {
+              this.achievementIndex[req.name] = [];
+            }
+
+            if (req.type.match(/^grid/)) {
+              this.decomposeAchievementRequirement(achievement, achievement.requirements, req);
+            } else {
+              achievement.requirements.push(req);
+              this.achievementIndex[req.name].push(achievement);
+            }
+          }
+
+          if (!this.achievementByRarity[achievement.rarity]) {
+            this.achievementByRarity[achievement.rarity] = [];
+          }
+          this.achievementByRarity[achievement.rarity].push(achievement);
+        }
+      }
+    };
+
+    Survey.prototype.decomposeAchievementRequirement = function decomposeAchievementRequirement(achievement, reqList, req) {
+
+      var question = this.questionIndex[req.name];
+
+      if (!question) {
+        console.log("Achievement requirement name error: ", req.name);
+        return;
+      }
+
+      var matches = req.type.match(/^grid-column-(.*)/);
+      if (matches) {
+        var column = req.column || 0;
+        var type = matches[1];
+
+        for (var _iterator5 = question.rows, _isArray5 = Array.isArray(_iterator5), _i5 = 0, _iterator5 = _isArray5 ? _iterator5 : _iterator5[Symbol.iterator]();;) {
+          var _ref5;
+
+          if (_isArray5) {
+            if (_i5 >= _iterator5.length) break;
+            _ref5 = _iterator5[_i5++];
+          } else {
+            _i5 = _iterator5.next();
+            if (_i5.done) break;
+            _ref5 = _i5.value;
+          }
+
+          var row = _ref5;
+
+          var name = question.name + "." + row.name + "." + question.columns[column].name;
+          reqList.push({
+            name: name,
+            type: type,
+            value: req.value
+          });
+
+          if (!this.achievementIndex[name]) {
+            this.achievementIndex[name] = [];
+          }
+          this.achievementIndex[name].push(achievement);
+        }
+      }
     };
 
     return Survey;
@@ -1284,7 +1513,7 @@ define('question-widgets/checkbox-grid-widget',["exports"], function (exports) {
 
   ;
 });
-define('question-widgets/checkbox-widget',['exports', 'aurelia-framework', '../scoreboard'], function (exports, _aureliaFramework, _scoreboard) {
+define('question-widgets/checkbox-widget',['exports', 'aurelia-framework', '../models/scoreboard'], function (exports, _aureliaFramework, _scoreboard) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -1495,7 +1724,7 @@ define('question-widgets/number-grid-widget',["exports"], function (exports) {
 
   ;
 });
-define('question-widgets/number-widget',['exports', 'aurelia-framework', '../scoreboard'], function (exports, _aureliaFramework, _scoreboard) {
+define('question-widgets/number-widget',['exports', 'aurelia-framework', '../models/scoreboard'], function (exports, _aureliaFramework, _scoreboard) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -1625,7 +1854,7 @@ define('question-widgets/number-widget',['exports', 'aurelia-framework', '../sco
     }
   })), _class2)) || _class);
 });
-define('question-widgets/radio-widget',['exports', 'aurelia-framework', '../scoreboard'], function (exports, _aureliaFramework, _scoreboard) {
+define('question-widgets/radio-widget',['exports', 'aurelia-framework', '../models/scoreboard'], function (exports, _aureliaFramework, _scoreboard) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -1762,7 +1991,7 @@ define('question-widgets/radio-widget',['exports', 'aurelia-framework', '../scor
     }
   })), _class2)) || _class);
 });
-define('question-widgets/select-widget',['exports', 'aurelia-framework', '../scoreboard'], function (exports, _aureliaFramework, _scoreboard) {
+define('question-widgets/select-widget',['exports', 'aurelia-framework', '../models/scoreboard'], function (exports, _aureliaFramework, _scoreboard) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -1904,18 +2133,70 @@ define('resources/index',["exports"], function (exports) {
   exports.configure = configure;
   function configure(config) {}
 });
+define('models/achievement-group',["exports", "./achievement"], function (exports, _achievement) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.AchievementGroup = undefined;
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var AchievementGroup = exports.AchievementGroup = function () {
+    function AchievementGroup(rarity) {
+      _classCallCheck(this, AchievementGroup);
+
+      this.rarity = "";
+      this.achievements = [];
+
+      this.rarity = rarity;
+    }
+
+    AchievementGroup.fromObject = function fromObject(rarity, allAchievements) {
+      var self = new AchievementGroup();
+
+      for (var _iterator = allAchievements, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+        var _ref;
+
+        if (_isArray) {
+          if (_i >= _iterator.length) break;
+          _ref = _iterator[_i++];
+        } else {
+          _i = _iterator.next();
+          if (_i.done) break;
+          _ref = _i.value;
+        }
+
+        var ach = _ref;
+
+        if (ach.rarity === this.rarity) {
+          this.achievements.push(_achievement.Achievement.fromObject(ach));
+        }
+      }
+
+      return self;
+    };
+
+    return AchievementGroup;
+  }();
+});
 define('text!app.html', ['module'], function(module) { module.exports = "<template><require from=\"app.css\"></require><div class=\"container\"><compose view-model=\"header\"></compose><div class=\"page-host\"><router-view></router-view></div></div></template>"; });
 define('text!app.css', ['module'], function(module) { module.exports = "/*\n@media screen and ( min-width: 320px ){\n    html {\n        font-size: 150%;\n    }\n}\n\n@media screen and ( max-width: 830px ){\n    body {\n        margin: 50px 15px 0 15px;\n    }\n}\n*/\n\nbody {\n    margin: auto;\n    //max-width: 800px;\n    margin-top: 50px;\n}\n\n.body-background {\n    position: fixed;\n    top: calc(50px + 20vh);\n    left: 0px;\n    z-index: -1;\n    width: 100%;\n    text-align: center;\n    vertical-align: middle;\n}\n\n.body-background-symbol {\n    color: #b56f6f;\n    opacity: 0.5;\n    font-size: 50vw;\n    text-shadow: 4px 4px 8px rgba(0,0,0,0.8);\n    transform: rotate(30deg);\n}\n\ntd, th {\n    padding: 5px;\n}\n\nlabel {\n    color: #222;\n}\n\n.left-align {\n    text-align: left;\n}\n\n.right-align {\n    text-align: right;\n}\n\n.inline-half {\n    display: inline-block;\n    width: 50%;\n}\n\n.page-host {\n    //max-width: 800px;\n}\n\n.question {\n    margin: 20px 0px;\n}\n\n.group-with-border {\n    border:  1px solid rgba(181,111,111,0.3);\n    padding: 15px;\n    margin: 10px 0px;\n    box-shadow: 0px 2px 8px rgba(0,0,0, 0.2);\n    background-color: rgba(255,255,255,0.8);\n}\n\n.group-no-border {\n    padding: 0px;\n    margin: 10px 0px;\n}\n\n.radio-button {\n    cursor: pointer;\n    align-items: middle;\n    display: flex;\n    margin: 4px 10px;\n}\n\n.radio-circle {\n    font-size: 160%;\n    color: #009688;\n    margin-right: 10px;\n}\n\n.checkbox-box {\n    font-size: 200%;\n    color: #009688;\n}\n\n.number-widget-minus, .number-widget-plus, .number-widget-input {\n    vertical-align: top;\n    display: inline-block;\n    border:  1px solid #888;\n    height: 100%;\n}\n\n.number-widget-minus, .number-widget-plus {\n    width: 1.5em;\n    text-align: center;\n    background-color: #009688;\n    color: white;\n    cursor: pointer;\n    -webkit-user-select: none;  \n    -moz-user-select: none;    \n    -ms-user-select: none;      \n    user-select: none;\n}\n\n.number-widget-minus {\n    border-radius: 4px 0px 0px 4px;\n    font-weight: bold;\n    margin-left: 8px;\n}\n\n.number-widget-plus {\n    border-radius: 0px 4px 4px 0px;\n    margin-right: 8px;\n}\n\n.number-widget-action {\n    font-size: 90%;\n}\n\n.number-widget-input {\n    min-width: 2.5em;\n    padding: 0px 5px 0px 8px;\n    text-align: right;\n    border-left: none;\n    border-right: none;\n}\n"; });
 define('text!footer.html', ['module'], function(module) { module.exports = "<template><require from=\"footer.css\"></require><nav class=\"footer navbar navbar-default navbar-fixed-bottom\"><div class=\"container\"><ul class=\"nav navbar-nav pull-left\">${message}</ul></div></nav></template>"; });
 define('text!footer.css', ['module'], function(module) { module.exports = ".footer {\n    color: white;\n    min-height: 20px;\n}"; });
 define('text!group-view.html', ['module'], function(module) { module.exports = "<template><div class=\"form-group\"><div if.bind=\"group.border == true\" class=\"group-with-border\">${group.name}<div repeat.for=\"item of group.items\"><compose if.bind=\"item.constructor.name === 'Group'\" model.bind=\"item\" view-model=\"group-view\"></compose><compose if.bind=\"item.constructor.name != 'Group'\" model.bind=\"item\" view-model=\"question-view\"></compose></div></div><div if.bind=\"group.border == false\" class=\"group-no-border\">${group.name}<div repeat.for=\"item of group.items\"><compose if.bind=\"item.constructor.name === 'Group'\" model.bind=\"item\" view-model=\"group-view\"></compose><compose if.bind=\"item.constructor.name != 'Group'\" model.bind=\"item\" view-model=\"question-view\"></compose></div></div></div></template>"; });
-define('text!header.css', ['module'], function(module) { module.exports = ".dheader {\n    position: fixed;\n    top:      0px;\n    z-index:  1;\n    padding:  8px;\n    background-color: white;\n    box-shadow: 0px 2px 5px rgba(0,0,0, 0.3);\n    margin: auto;\n    width: 800px;\n}\n\n.dheader-content {\n    width: 100%;\n}\n\n.header {\n    position: fixed;\n    top: 0;\n    height: 5em;\n    max-width: 800px;\n    width: calc(100% - 15px);\n    z-index: 10;\n}\n\n.header-content {\n    padding: 2px 10px;\n    width: 100%;\n    height: 100%;\n    background-color: #ffdd88;\n    z-index: 10;\n    box-shadow: 0px 2px 8px rgba(0,0,0,0.3);\n}\n\n.header-title {\n    position: absolute;\n    bottom: 15px;\n    font-size: 200%;\n    margin: 4px 0px 0px 10px;\n    \n}\n\n\n@media screen and ( max-width: 830px ){\n    .header {\n        margin-right: 15px;\n    }\n}\n\n.header-score-notification-container {\n    float: right;\n}\n\n.header-score-notification {\n    padding:          8px;\n    border-radius:    3px;\n    background-color: #fbb;\n    min-width:        2.5em;\n    text-align:       center;\n}\n\n.skip {\n   position:         absolute;\n    top:              -1000px;\n    right:            20vw;\n \n}\n\n.header-score-notification.au-enter-active { \n  animation: riseAndFade 2.5s; \n  overflow: hidden; \n} \n \n@keyframes riseAndFade { \n    0% {\n        top: 10px;\n        opacity: 1;\n        box-shadow: 0px 0px 4px 2px rgba(255,155,155, 0.8);\n    }\n    20% {\n        box-shadow: 0px 0px 10px 16px rgba(255,155,155, 0.2);\n    }\n    40% {\n        box-shadow: 0px 0px 12px 18px rgba(255,155,155, 0);\n    }\n    100% {\n        top: -10px;\n        opacity: 0;\n        box-shadow: 0px 0px 14px 22px rgba(255,255,255, 0);\n    } \n} \n \n"; });
-define('text!header.html', ['module'], function(module) { module.exports = "<template><require from=\"header.css\"></require><nav class=\"navbar-fixed-top\"><nav class=\"navbar navbar-default\"><div class=\"container\"><ul class=\"nav navbar-nav pull-right\"><li class=\"navbar-brand\">Current Score: ${score}</li></ul><div class=\"header-score-notification au-animate\" repeat.for=\"notification of achievementNotifications\">${notification}</div><compose view-model=\"header/achievements\"></compose></div></nav><div class=\"header-score-notification-container\"><div class=\"header-score-notification au-animate\" repeat.for=\"notification of scoreNotifications\">${notification}</div></div></nav></template>"; });
+define('text!header.css', ['module'], function(module) { module.exports = ".header {\n    position: fixed;\n    top: 0;\n    height: 5em;\n    max-width: 800px;\n    width: calc(100% - 15px);\n    z-index: 10;\n}\n\n.header-content {\n    padding: 2px 10px;\n    width: 100%;\n    height: 100%;\n    background-color: #ffdd88;\n    z-index: 10;\n    box-shadow: 0px 2px 8px rgba(0,0,0,0.3);\n}\n\n.header-title {\n    position: absolute;\n    bottom: 15px;\n    font-size: 200%;\n    margin: 4px 0px 0px 10px;\n    \n}\n\n\n@media screen and ( max-width: 830px ){\n    .header {\n        margin-right: 15px;\n    }\n}\n\n.header-score-notification-container {\n    float: right;\n}\n\n.header-score-notification {\n    padding:          8px;\n    border-radius:    3px;\n    background-color: #fbb;\n    min-width:        2.5em;\n    text-align:       center;\n}\n\n.skip {\n   position:         absolute;\n    top:              -1000px;\n    right:            20vw;\n \n}\n\n.header-score-notification.au-enter-active { \n  animation: riseAndFade 2.5s; \n  overflow: hidden; \n} \n \n@keyframes riseAndFade { \n    0% {\n        top: 10px;\n        opacity: 1;\n        box-shadow: 0px 0px 4px 2px rgba(255,155,155, 0.8);\n    }\n    20% {\n        box-shadow: 0px 0px 10px 16px rgba(255,155,155, 0.2);\n    }\n    40% {\n        box-shadow: 0px 0px 12px 18px rgba(255,155,155, 0);\n    }\n    100% {\n        top: -10px;\n        opacity: 0;\n        box-shadow: 0px 0px 14px 22px rgba(255,255,255, 0);\n    } \n} \n \n.achievement-group {\n    margin: 10px 0px;\n    border: 1px solid red;\n\n}\n\n.achievement-plaque {\n    display:          inline-flex;\n    flex-wrap:        wrap;\n    margin:  5px;\n    border: 1px solid black;\n    padding: 5px;\n}\n\n.achievement-failed {\n    color: #888888;\n}\n\n.achievement-met {\n    color: #000;\n}\n"; });
+define('text!header.html', ['module'], function(module) { module.exports = "<template><require from=\"header.css\"></require><nav class=\"navbar-fixed-top\"><nav class=\"navbar navbar-default\"><div class=\"container\"><ul class=\"nav navbar-nav pull-right\"><li class=\"navbar-brand\">Current Score: ${score}</li></ul><div class=\"header-score-notification au-animate\" repeat.for=\"notification of achievementNotifications\">${notification}</div><compose view-model=\"header/achievements-view\"></compose></div></nav><div class=\"header-score-notification-container\"><div class=\"header-score-notification au-animate\" repeat.for=\"notification of scoreNotifications\">${notification}</div></div></nav></template>"; });
 define('text!home.html', ['module'], function(module) { module.exports = "<template><compose view-model=\"page-view\" model.bind=\"survey.pages[pageIdx]\"></compose><div class=\"text-center group-with-border\"><h2><a if.bind=\"survey.pages[pageIdx+1]\" href=\"${router.generate('home', {pageNum: pageIdx+2})}\">Next: ${survey.pages[pageIdx+1].name}</a></h2></div><div class=\"inline-half left-align link\"><a if.bind=\"pageIdx > 0\" href=\"${router.generate('home', {pageNum: pageIdx})}\"><i class=\"fa fa-caret-left\"></i> ${survey.pages[pageIdx-1].name}</a></div></template>"; });
 define('text!page-view.html', ['module'], function(module) { module.exports = "<template><div if.bind=\"page.backSymbol\" class=\"body-background\"><i class=\"fa fa-${page.backSymbol} body-background-symbol\"></i></div><h1>${page.name}</h1><compose view-model=\"group-view\" model.bind=\"page.group\"></compose></template>"; });
 define('text!page.html', ['module'], function(module) { module.exports = "<template><div if.bind=\"backSymbol\" class=\"body-background\"><i class=\"fa fa-${backSymbol} body-background-symbol\"></i></div><h1>${page.name}</h1><compose view-model=\"group-view\" model.bind=\"page.group\"></compose></template>"; });
 define('text!question-view.html', ['module'], function(module) { module.exports = "<template><div class=\"question\"><compose model.bind=\"question\" view-model=\"./question-widgets/${question.type}-widget\"></compose></div></template>"; });
-define('text!header/achievements.html', ['module'], function(module) { module.exports = "<template>Achievements!<div class=\"\" repeat.for=\"achievement of achievements\">${achievement.name} ${achievementState[achievement.name] ? \"met\" : \"failed\"}</div></template>"; });
+define('text!header/achievements-view.html', ['module'], function(module) { module.exports = "<template>Achievements!<div class=\"achievement-group\" repeat.for=\"rarity of rarityLevels\">${rarity}<div><div class=\"achievement-plaque ${achievementState[achievement.name] ? 'achievement-met' : 'achievement-failed'}\" repeat.for=\"achievement of achievementByRarity[rarity]\">${achievement.name}</div></div></div></template>"; });
 define('text!header/score.html', ['module'], function(module) { module.exports = "<template>Score: ${score}</template>"; });
 define('text!question-widgets/checkbox-grid-widget.html', ['module'], function(module) { module.exports = "<template><table><tr><th>Question</th><th repeat.for=\"column of question.columns\" class=\"text-center\">${column.name}</th></tr><tr repeat.for=\"row of question.rows\"><td>${row.name}</td><td repeat.for=\"column of question.columns\" class=\"text-center\"><compose model.bind=\"checkboxes[row.name][column.name]\" view-model=\"./checkbox-widget\"></compose></td></tr></table></template>"; });
 define('text!question-widgets/checkbox-widget.html', ['module'], function(module) { module.exports = "<template><div class=\"checkbox-widget\"><span if.bind=\"label\">${label}</span> <i if.bind=\"value\" class=\"checkbox-box fa fa-check-square\"></i> <i if.bind=\"!value\" class=\"checkbox-box fa fa-square-o\"></i></div></template>"; });

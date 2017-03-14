@@ -1,5 +1,5 @@
 import {inject, computedFrom} from 'aurelia-framework';
-import { ScoreBoard } from "./scoreboard";
+import { ScoreBoard } from "./models/scoreboard";
 
 @inject(ScoreBoard)
 export class Header {

@@ -1,5 +1,5 @@
 import {inject, bindable} from 'aurelia-framework';
-import {ScoreBoard} from '../scoreboard';
+import {ScoreBoard} from '../models/scoreboard';
 
 function isNavigationOrSelectionKey(e) {
   if ([46, 8, 9, 27, 110, 190].indexOf(e.keyCode) !== -1 ||

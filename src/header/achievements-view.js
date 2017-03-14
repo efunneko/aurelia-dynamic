@@ -1,8 +1,10 @@
 import {inject, computedFrom} from 'aurelia-framework';
-import {ScoreBoard} from "../scoreboard";
+import {ScoreBoard} from "../models/scoreboard";
 
 @inject(ScoreBoard)
 export class Achievements {
+  rarityLevels = ['common', 'rare', 'epic', 'legendary'];
+  
   constructor(scoreboard) {
     this.scoreboard = scoreboard;
   }
@@ -14,6 +16,15 @@ export class Achievements {
       return [];
     }
     return this.scoreboard.survey.achievements;
+  }
+
+  @computedFrom('scoreboard.achievements')
+  get achievementByRarity() {
+    if (!this.scoreboard.survey) {
+      return [];
+    }
+    console.log("Achievements by rarity:", this.scoreboard.survey.achievementByRarity);
+    return this.scoreboard.survey.achievementByRarity;
   }
 
   @computedFrom('scoreboard.achievements')

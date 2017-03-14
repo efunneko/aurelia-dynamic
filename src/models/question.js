@@ -1,8 +1,7 @@
 import {inject} from 'aurelia-framework';
  
 export class Question { 
-  constructor(scoreboard) {
-    this.scoreboard = scoreboard;
+  constructor() {
   }
 
   static fromObject(src) { 

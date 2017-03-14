@@ -1,18 +1,3 @@
-.dheader {
-    position: fixed;
-    top:      0px;
-    z-index:  1;
-    padding:  8px;
-    background-color: white;
-    box-shadow: 0px 2px 5px rgba(0,0,0, 0.3);
-    margin: auto;
-    width: 800px;
-}
-
-.dheader-content {
-    width: 100%;
-}
-
 .header {
     position: fixed;
     top: 0;
@@ -89,3 +74,24 @@
     } 
 } 
  
+.achievement-group {
+    margin: 10px 0px;
+    border: 1px solid red;
+
+}
+
+.achievement-plaque {
+    display:          inline-flex;
+    flex-wrap:        wrap;
+    margin:  5px;
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.achievement-failed {
+    color: #888888;
+}
+
+.achievement-met {
+    color: #000;
+}

@@ -1,6 +1,6 @@
-import {Answer} from "./models/answer";
+import {Answer} from "./answer";
 import {inject} from 'aurelia-framework';
-import {DataManager} from './data-manager'; 
+import {DataManager} from '../data-manager'; 
 
 @inject(DataManager)
 export class ScoreBoard {

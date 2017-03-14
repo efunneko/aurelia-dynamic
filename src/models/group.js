@@ -7,7 +7,7 @@ export class Group {
     let tmpItems = group.items;
     console.log(tmpItems);
     group.items = [];
-    console.log(tmpItems);
+    console.log("temp items:", tmpItems);
     for (let item of tmpItems) {
       // We can have groups in groups
       if (item.type === "group") {

@@ -4,9 +4,9 @@ export default {
   description: "Ask about this and that",
   achievements: [
     {
-      name: "Test 1",
+      name: "Test 1a",
       score: 5,
-      level: "common",
+      rarity: "common",
       requirements: [
         {
           name: "number-input",
@@ -22,9 +22,47 @@ export default {
       ]
     },
     {
-      name: "Test 2",
+      name: "Test 1b",
+      score: 5,
+      rarity: "common",
+      requirements: [
+        {
+          name: "number-input",
+          type: "greater-than",
+          value: 0
+        },
+        {
+          name: "condiments",
+          type: "grid-column-greater-than",
+          column: 0,
+          value: 0
+        }
+      ]
+    },
+    {
+      name: "Test 1c",
+      score: 5,
+      rarity: "common",
+      requirements: [
+        {
+          name: "number-input",
+          type: "greater-than",
+          value: 0
+        },
+        {
+          name: "condiments",
+          type: "grid-column-greater-than",
+          column: 0,
+          value: 0
+        }
+      ]
+    },
+
+    // Rare
+    {
+      name: "Test 2a",
       score: 15,
-      level: "common",
+      rarity: "rare",
       requirements: [
         {
           name: "number-grid",
@@ -35,14 +73,42 @@ export default {
       ]
     },
     {
+      name: "Test 2b",
+      score: 15,
+      rarity: "rare",
+      requirements: [
+        {
+          name: "number-grid",
+          type: "grid-column-greater-than",
+          column: 1,
+          value: 0
+        }
+      ]
+    },
+
+    // Epic
+    {
       name: "Test 3",
       score: 25,
-      level: "common",
+      rarity: "epic",
       requirements: [
         {
           name: "condiments",
           type: "grid-column-greater-than",
           column: 1,
+          value: 0
+        }
+      ]
+    },
+    {
+      name: "Legendary",
+      score: 25,
+      rarity: "legendary",
+      requirements: [
+        {
+          name: "condiments",
+          type: "grid-column-greater-than",
+          column: 2,
           value: 0
         }
       ]

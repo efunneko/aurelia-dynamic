@@ -1,0 +1,14 @@
+<template>
+  Achievements!
+  <div class="achievement-group" repeat.for="rarity of rarityLevels">
+    ${rarity}
+    <div>
+      <div class="achievement-plaque ${achievementState[achievement.name] ? 'achievement-met' : 'achievement-failed'}" 
+           repeat.for="achievement of achievementByRarity[rarity]">
+        ${achievement.name} 
+      </div>
+    </div>
+  </div>
+
+
+</template>
